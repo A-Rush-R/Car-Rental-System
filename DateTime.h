@@ -14,6 +14,8 @@ public:
     int getMonth() const;
     int getDay() const;
     void display() const;
+    static int daysInMonth(int year, int month);
+    static bool isLeapYear(int year);
 };
 
 #endif // DATETIME_H

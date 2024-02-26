@@ -1,39 +1,49 @@
 #include<iostream>
+#include<sstream>  
 #include<string>
 #include<fstream>
 #include<vector>
 #include<algorithm>
 #include "DateTime.h"
 #include<cassert>
-#define AVG_CUSTOMER_RECORD 100
-#define AVG_EMPLOYEE_RECORD 200
+#include<regex>
 using namespace std;
+#define PENALTY_CUSTOMER 200
 #define HEAVY_DAMAGE 0
 #define LIGHT_DAMAGE 1
 #define MINOR_SCRATCHES 2
 #define FINE 3
+int AVG_CUSTOMER_RECORD = 100;
+int AVG_EMPLOYEE_RECORD=  200;
 
 //Employee IDs begin with 2
 //Customer IDs begin with 1
 
-// class Car
-// {
-//     private :
-//         DateTime due_date;
-//     public :
-//         int id;
-//         int model;
-//         int condition;
+int operator-(const DateTime& date1, const DateTime& date2) {
+    int days1 = date1.getYear() * 365 + (date1.getYear() / 4 - date1.getYear() / 100 + date1.getYear() / 400);
+    for (int m = 1; m < date1.getMonth(); ++m) {
+        days1 += DateTime :: daysInMonth(date1.getYear(), m);
+    }
+    days1 += date1.getDay();
 
-//         int rent_request()
-//         {
-//             //code here
-//             return 0;
-//         }
+    int days2 = date2.getYear() * 365 + (date2.getYear() / 4 - date2.getYear() / 100 + date2.getYear() / 400);
+    for (int m = 1; m < date2.getMonth(); ++m) {
+        days2 += DateTime :: daysInMonth(date2.getYear(), m);
+    }
+    days2 += date2.getDay();
 
-//         DateTime show_due_date(){ return due_date; }
+    return days1 - days2;
+}
 
-// };
+void parse_date(string date, int* d,int* m,int* y)
+{
+    // Input string stream for parsing
+    std::istringstream iss(date);
+
+    // Parsing day, month, and year from the string
+    char delimiter;
+    iss >> *d >> delimiter >> *m >> delimiter >> *y;
+}
 
 class Car {
 
@@ -44,14 +54,7 @@ public:
     int condition;
     int ownerID;
 
-    Car(int id = 0, int model = 0, int condition = 0,DateTime due_date = DateTime(0,0,0), int ownerID = 0)
-    {
-        this->id = id;
-        this->model = model;
-        this->condition = condition;
-        this->due_date = due_date; 
-        this->ownerID = ownerID;
-    }
+    Car(int id = 0, int model = 0, int condition = 0,DateTime due_date = DateTime(0,0,0), int ownerID = 0) : id(id), model(model), condition(condition), due_date(due_date), ownerID(ownerID){}
 
     void show() const
     {
@@ -143,6 +146,12 @@ public:
                     it.show();
             }
     }
+    static void showcars(vector<Car>& cars)
+    {
+        for(auto& it  : cars){
+            it.show();
+        }
+    }
 };
 
 class User
@@ -168,6 +177,7 @@ class User
             else 
                 return 0;
         }
+        // virtual void begin_session() = 0;
     
 };
 
@@ -179,7 +189,7 @@ class Customer : public User
 
     public : 
         void set_password(string pass) {password = pass;}
-        Customer(const string& name = "", int id = 0, const string& password = "", int fine_due = 0, int record = AVG_CUSTOMER_RECORD) : User(name, id, password), fine_due(fine_due), record(record) {}
+        Customer(const string& name = "", int id = 0, const string& password = "", int fine_due = 0, int record = AVG_CUSTOMER_RECORD) : User(name, id, password), fine_due(fine_due), record(record), rented_cars() {}
 
         void clear_due()
         {
@@ -305,7 +315,80 @@ class Customer : public User
             for (auto& it : customers)
                 it.show();
         }
-        
+
+        void begin_session(vector<Car>& cars)
+        {
+            cout << "Welcome " << name << endl;
+            int k;
+            cout << "Choose an option\n1 - Show Available Cars\n2 - Rent a Car\n3 - Return a Car" << endl;
+            cin >> k;
+
+            char delimiter;
+
+            string date;
+            DateTime dt1,dt2;
+            int diff;
+
+            Car* carIt;
+            int d,m,y;
+            int carID;
+            regex pattern("\\b\\d{2}-\\d{2}-\\d{4}\\b");
+            switch(k)
+            {
+                case 1 :
+                    Car :: showcars(cars, rented_cars, id);
+                    break;
+                case 2 :
+                    cout << "Enter the id of the car to be rented : " ;
+                    cin >> carID;
+                    cout << "Enter the date of rental in DD-MM-YYYY format : ";
+                    cin >> date;
+                    parse_date(date,&d,&m,&y);
+
+                    carIt = Car :: searchCarById(cars,carID);
+
+                    if(carIt->ownerID == 0){
+                        carIt->ownerID = id;
+                        carIt->due_date = DateTime(y,m,d);
+                        rented_cars.push_back(carID);
+                    }
+                    else
+                        cout << "This car is not available for rental" << endl;
+
+                    begin_session(cars);
+                    break;
+
+                case 3 :
+                    cout << "Enter the id of the car to be returned" << endl;
+                    cin >> carID;
+                    cout << "Enter the date of return in DD-MM-YYYY format : ";
+                    cin >> date;
+
+
+                    // Check if the input matches the pattern
+                    if (regex_match(date, pattern)) {}
+                    else {
+                        cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
+                        begin_session(cars);
+                    }
+
+                    carIt = Car :: searchCarById(cars,carID);
+                    carIt->ownerID = 0;
+                    rented_cars.erase(remove(rented_cars.begin(), rented_cars.end(), carID), rented_cars.end());
+
+                    parse_date(date,&d,&m,&y);
+
+                    diff = DateTime(y,m,d) - carIt->due_date;
+                    fine_due += diff*PENALTY_CUSTOMER;
+
+                    break;
+
+                default :
+                    cout << "Enter a valid option" << endl;
+                    begin_session(cars);
+                    break;
+            }
+        }
 };
 
 class Employee : public User 
@@ -453,6 +536,80 @@ class Employee : public User
         {
             for(auto& it : Employees)
                 it.show();
+        }
+
+        void begin_session(vector<Car>& cars)
+        {
+            cout << "Welcome " << name << endl;
+            int k;
+            cout << "Choose an option\n1 - Show Available Cars\n2 - Rent a Car\n3 - Return a Car" << endl;
+            cin >> k;
+
+            char delimiter;
+
+            string date;
+            DateTime dt1,dt2;
+            int diff;
+
+            Car* carIt;
+            int d,m,y;
+            int carID;
+            regex pattern("\\b\\d{2}-\\d{2}-\\d{4}\\b");
+            switch(k)
+            {
+                case 1 :
+                    Car :: showcars(cars, rented_cars, id);
+                    break;
+                case 2 :
+                    cout << "Enter the id of the car to be rented : " ;
+                    cin >> carID;
+                    cout << "Enter the date of rental in DD-MM-YYYY format : ";
+                    cin >> date;
+                    parse_date(date,&d,&m,&y);
+
+                    carIt = Car :: searchCarById(cars,carID);
+
+                    if(carIt->ownerID == 0){
+                        carIt->ownerID = id;
+                        carIt->due_date = DateTime(y,m,d);
+                        rented_cars.push_back(carID);
+                    }
+                    else
+                        cout << "This car is not available for rental" << endl;
+
+                    begin_session(cars);
+                    break;
+
+                case 3 :
+                    cout << "Enter the id of the car to be returned" << endl;
+                    cin >> carID;
+                    cout << "Enter the date of return in DD-MM-YYYY format : ";
+                    cin >> date;
+
+
+                    // Check if the input matches the pattern
+                    if (regex_match(date, pattern)) {}
+                    else {
+                        cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
+                        begin_session(cars);
+                    }
+
+                    carIt = Car :: searchCarById(cars,carID);
+                    carIt->ownerID = 0;
+                    rented_cars.erase(remove(rented_cars.begin(), rented_cars.end(), carID), rented_cars.end());
+
+                    parse_date(date,&d,&m,&y);
+
+                    diff = DateTime(y,m,d) - carIt->due_date;
+                    fine_due += diff*PENALTY_CUSTOMER;
+
+                    break;
+
+                default :
+                    cout << "Enter a valid option" << endl;
+                    begin_session(cars);
+                    break;
+            }
         }
 };
 
@@ -652,6 +809,27 @@ class Manager : public User
         {
             cout << id << " " << name << endl;
         }
+
+        void begin_session(vector<Customer>& customers, vector<Car>& cars, vector<Employee>& employees)
+        {
+            cout << "Welcome " << name << endl;
+            cout << "Choose an option\n1 - View Car Database\n2 - Modify the Records" << endl;
+            int k;
+            cin >> k;
+
+            switch(k)
+            {
+                case 1:
+                    Car :: showcars(cars);
+                    break;
+                case 2:
+                    modify_records(customers,cars,employees);
+                    break;
+                default:
+                    cout << "Invalid Option" << endl;
+                    begin_session(customers,cars,employees);
+            }
+        }
 };
 
 void saveToFile(const vector<Car>& cars, const string& filename) {
@@ -716,19 +894,22 @@ int main()
         case 1 :
             cout << "Enter the type of user :\n1 - Customer\n2 - Employee\n3 - Manager" << endl;
             cin >> j;
+            Customer* it1;
+            Employee* it2;
+            Manager* it3;
             switch(j)
             {
                 case 1: 
-                    auto it = Customer :: login(customers);
-                    it.begin_session();
+                    it1 = Customer :: login(customers);
+                    it1->begin_session(cars);
                     break;
                 case 2:
-                    auto it = Employee :: login(employees);
-                    it.begin_session();
+                    it2 = Employee :: login(employees);
+                    it2->begin_session(cars);
                     break;
                 case 3:
-                    auto it = Manager :: login(managers);
-                    it.begin_session();
+                    it3 = Manager :: login(managers);
+                    it3->begin_session(customers,cars,employees);
                     break;
             }
     }
