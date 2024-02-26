@@ -1,26 +1,32 @@
-        static Customer* login(vector<Customer>& customers) {
-            string name, password;
-            cout << "Enter Username: ";
-            cin >> name;
-            cout << "Enter Password: ";
-            cin >> password;
-
-            // Search for the customer with the given name
-            auto it = find_if(customers.begin(), customers.end(), [&name](const Customer& customer) {
-                return customer.name == name;
-            });
-
-            // If customer found, check password
-            if (it != customers.end()) {
-                if (it->password == password) {
-                    cout << "Login Successful!" << endl;
-                    return &(*it);
-                } else {
-                    cout << "Incorrect Password!" << endl;
-                    return nullptr;
-                }
-            } else {
-                cout << "Customer not found!" << endl;
-                return nullptr;
-            }
+void saveToFile(const vector<Customer>& Customers, const string& filename) {
+    ofstream outFile(filename);
+    if (outFile.is_open()) {
+        for (const auto& Customer : Customers) {
+            outFile << Customer.id << " " << Customer.name << " " << Customer.condition << " " << Customer.due_date.getYear() << " " << Customer.due_date.getMonth() << " " << Customer.due_date.getDay() << endl;
+            // cout << Customer.id << " " << Customer.model << " " << Customer.condition << endl;
         }
+        outFile.close();
+        cout << "Records saved to " << filename << endl;
+    } else {
+        cerr << "Unable to open file " << filename << endl;
+    }
+}
+
+void loadFromFile(vector<Customer>& Customers, const string& filename) {
+    ifstream inFile(filename);
+    if (inFile.is_open()) {
+        Customers.clear(); // Clear existing data
+        int id, model, condition;
+        int y,m,d;
+
+        while (inFile >> id >> model >> condition >> y >> m >> d) {
+            DateTime due_date(y,m,d);
+            Customer Customer(id,model,condition,due_date);
+            Customers.push_back(Customer);
+        }
+        inFile.close();
+        cout << "Records loaded from " << filename << endl;
+    } else {
+        cerr << "Unable to open file " << filename << endl;
+    }
+}

@@ -44,7 +44,7 @@ public:
     int condition;
     int ownerID;
 
-    Car(int id =0, int model = 0, int condition = 0,DateTime due_date = DateTime(0,0,0), int ownerID = 0)
+    Car(int id = 0, int model = 0, int condition = 0,DateTime due_date = DateTime(0,0,0), int ownerID = 0)
     {
         this->id = id;
         this->model = model;
@@ -129,11 +129,13 @@ public:
         }
     }
 
-    static void showcars(vector<Car>& cars, int userID = 0)
+    static void showcars(vector<Car>& cars,vector<int>& carIDs, int userID = 0)
     {
         if(userID == 0)
-            for(auto& it : cars)
-                it.show();
+            for(int carID : carIDs){
+                auto item = Car :: searchCarById(cars,carID);
+                item->show();
+            }
         else
             for(auto& it : cars)
             {
@@ -171,7 +173,7 @@ class User
 
 class Customer : public User 
 {
-        vector<Car> rented_cars;
+        vector<int> rented_cars;
         int fine_due;
         int record ;
 
@@ -187,7 +189,10 @@ class Customer : public User
         {
             cout << id << " " << name << " " << fine_due << " " << record << endl;
             cout << "List of Rented Car is ";
-            Car :: showcars(rented_cars);
+            for (auto& it : rented_cars)
+                cout << it << "\t" ;
+            cout << endl;
+            // Car :: showcars(cars,rented_cars);
         }
 
         // Function to add a new Customer to the database
@@ -223,6 +228,7 @@ class Customer : public User
             customers.push_back(Customer(name,id));
             customers.back().set_password(password);
         }
+
         static Customer* login(vector<Customer>& customers) {
             string name, password;
             cout << "Enter Username: ";
@@ -304,7 +310,7 @@ class Customer : public User
 
 class Employee : public User 
 {
-        vector<Car> rented_cars;
+        vector<int> rented_cars;
         int fine_due;
         int record ;
 
@@ -325,7 +331,10 @@ class Employee : public User
         {
             cout << id << " " << name << " " << fine_due << " " << record << endl;
             cout << "List of Rented Cars is ";
-            Car :: showcars(rented_cars);
+            for( auto& it : rented_cars)
+                cout << it << "\t" ;
+            cout << endl;
+            // Car :: showcars(rented_cars);
         }
 
         static void addEmployee(vector<Employee>& employees) {
@@ -686,27 +695,6 @@ int main()
     vector<Employee> employees;
     vector<Manager> managers;
 
-    // loadFromFile(cars, "cars.txt");
-    // loadFromFile(customers, "customers.txt")
-    // loadFromFile(employees, "employees.txt")
-
-    // Car :: addCar(cars,Car(100001,82,2,DateTime(2004,02,05)));
-    // Car :: addCar(cars,Car(100003,77,3,DateTime(2005,6,21)));
-    // Car :: addCar(cars,Car(100002,82,1,DateTime(2007,1,12)));
-
-    // saveToFile(cars,"cars.txt");
-
-    // loadFromFile(cars,"cars.txt");
-
-    // for(auto& it : cars){
-    //     cout << it.id << " " << it.model << " " << it.condition << " The Due date is ";
-    //     it.due_date.display() ;
-    // }
-    
-    // auto ptr = Car :: searchCarById(cars, 100007);
-    // cout << ptr->id << " " << ptr->model << " " << ptr->condition << " The Due date is ";
-    // ptr->due_date.display();
-
     int k;
     cout << "Welcome to Car Rental System" << endl ;
     cout << "----------------------------" << endl ;
@@ -732,12 +720,15 @@ int main()
             {
                 case 1: 
                     auto it = Customer :: login(customers);
+                    it.begin_session();
                     break;
                 case 2:
                     auto it = Employee :: login(employees);
+                    it.begin_session();
                     break;
                 case 3:
                     auto it = Manager :: login(managers);
+                    it.begin_session();
                     break;
             }
     }
