@@ -6,6 +6,7 @@
 #include "DateTime.h"
 #include<cassert>
 #define AVG_CUSTOMER_RECORD 100
+#define AVG_EMPLOYEE_RECORD 200
 using namespace std;
 #define HEAVY_DAMAGE 0
 #define LIGHT_DAMAGE 1
@@ -181,8 +182,36 @@ class Customer : public User
         }
 
         // Function to add a new Customer to the database
-        static void addCustomer(vector<Customer>& Customers, const Customer& newCustomer) {
-            Customers.push_back(newCustomer);
+        static void addCustomer(vector<Customer>& customers) {
+            string name,password,temp;
+            int id;
+
+            cout << "Enter Name : " ;
+            cin >> name ;
+            cout << endl;
+
+            cout << "Enter Password : ";
+            cin >> password ;
+            cout << endl;
+
+            cout << "Confirm Password : ";
+            cin >> temp ;
+            cout << endl;
+
+            while( temp != password)
+            {
+                cout << "Passwords don't match!" << endl;
+                cout << "Enter your Password : ";
+                cin >> password ;
+                cout << endl;
+
+                cout << "Confirm Password : ";
+                cin >> temp ;
+                cout << endl;
+            }
+
+            customers.push_back(Customer(name,id));
+            customers.back().set_password(password);
         }
 
         // Function to update an existing Customer in the database
@@ -198,14 +227,18 @@ class Customer : public User
         }
 
         // Function to delete a Customer from the database
-        static void deleteCustomer(vector<Customer>& Customers, int CustomerId) {
-            auto it = std::lower_bound(Customers.begin(), Customers.end(), CustomerId, [](const Customer& Customer, int id) {
+        static void deleteCustomer(vector<Customer>& Customers) {
+
+            int id;
+            cout << "Enter the id of the Customer to be deleted : " ;
+            cin >> id;
+            auto it = std::lower_bound(Customers.begin(), Customers.end(), id, [](const Customer& Customer, int id) {
                 return Customer.id < id;
             });
             if (it != Customers.end()) {
                 Customers.erase(it);
             } else {
-                cout << "Customer with ID " << CustomerId << " not found." << endl;
+                cout << "Customer with ID " << id << " not found." << endl;
             }
         }
 
@@ -236,6 +269,12 @@ class Employee : public User
         int record ;
 
     public : 
+        Employee(const string& name = "", int id = 0, const string& password = "", int fine_due = 0, int record = AVG_EMPLOYEE_RECORD) : User(name, id, password), fine_due(fine_due), record(record) {}
+
+        void set_password(string pass)
+        {
+            password = pass;
+        }
 
         void clear_due()
         {
@@ -249,8 +288,36 @@ class Employee : public User
             Car :: showcars(rented_cars);
         }
 
-        static void addEmployee(vector<Employee>& Employees, const Employee& newEmployee) {
-            Employees.push_back(newEmployee);
+        static void addEmployee(vector<Employee>& employees) {
+            string name,password,temp;
+            int id;
+
+            cout << "Enter Name : " ;
+            cin >> name ;
+            cout << endl;
+
+            cout << "Enter Password : ";
+            cin >> password ;
+            cout << endl;
+
+            cout << "Confirm Password : ";
+            cin >> temp ;
+            cout << endl;
+
+            while( temp != password)
+            {
+                cout << "Passwords don't match!" << endl;
+                cout << "Enter your Password : ";
+                cin >> password ;
+                cout << endl;
+
+                cout << "Confirm Password : ";
+                cin >> temp ;
+                cout << endl;
+            }
+
+            employees.push_back(Employee(name,id));
+            employees.back().set_password(password);
         }
 
         // Function to update an existing Employee in the database
@@ -267,14 +334,19 @@ class Employee : public User
         }
 
         // Function to delete a Employee from the database
-        static void deleteEmployee(vector<Employee>& Employees, int EmployeeId) {
-            auto it = std::lower_bound(Employees.begin(), Employees.end(), EmployeeId, [](const Employee& Employee, int id) {
+        static void deleteEmployee(vector<Employee>& Employees) {
+
+            int id;
+            cout << "Enter the id of the Customer to be deleted : " ;
+            cin >> id;
+
+            auto it = std::lower_bound(Employees.begin(), Employees.end(), id, [](const Employee& Employee, int id) {
                 return Employee.id < id;
             });
             if (it != Employees.end()) {
                 Employees.erase(it);
             } else {
-                cout << "Employee with ID " << EmployeeId << " not found." << endl;
+                cout << "Employee with ID " << id << " not found." << endl;
             }
         }
 
@@ -321,37 +393,46 @@ class Manager : public User
                 case 1 : 
                     cout << "Choose the operation you want to perform\n1 - Add\n2 - Update\n3 - Delete" << endl;
                     cin >> j;
-                    cout << "Choose the id you want to modify/add" << endl;
-                    cin >> id;
 
                     switch (j)
                     {
                     case 1:
-                        cout << "Enter the details\n Name of the customer : " ;
-                        cin >> name;
-                        cout << "Enter the password : ";
-                        cin >> password;
-
-                        Customer :: addCustomer(customers, Customer(name,id));
-                        customers.back().set_password(password);
+                        Customer :: addCustomer(customers);
                         break;
                     case 2:
-                        cout << "Enter the details\n Name of the customer : " ;
-                        cin >> name;
-                        cout << "Enter the password : ";
-                        cin >> password;
-
-                        Customer :: addCustomer(customers, Customer(name,id));
-                        customers.back().set_password(password);
+                        Customer :: updateCustomer(customers);
                         break;
                     case 3:
-                        Customer :: deleteCustomer(customers, id);
+                        Customer :: deleteCustomer(customers);
                         break;
                     default:
+                        cout << "Incorrect Option !" << endl;
+                        modify_records(customers,cars,employees);
+
                         break;
                     }
                     break;
                 case 2 : 
+                    cout << "Choose the operation you want to perform\n1 - Add\n2 - Update\n3 - Delete" << endl;
+                    cin >> j;
+
+                    switch (j)
+                    {
+                    case 1:
+                        Employee :: addEmployee(employees);
+                        break;
+                    case 2:
+                        Employee :: updateEmployee(employees);
+                        break;
+                    case 3:
+                        Employee :: deleteEmployee(employees);
+                        break;
+                    default:
+                        cout << "Incorrect Option !" << endl;
+                        modify_records(customers,cars,employees);
+
+                        break;
+                    }
                     break ;
                 case 3 : 
                     break;
@@ -410,79 +491,44 @@ int main()
     // loadFromFile(customers, "customers.txt")
     // loadFromFile(employees, "employees.txt")
 
-    int k;
-    cout << "Welcome to Car Rental System" << endl ;
-    cout << "----------------------------" << endl ;
-
-    cout << "New user or previous user ?" <<  endl;
-    cout << "0 - New User \n1 - Previous User\n" << endl;
-
     // Car :: addCar(cars,Car(100001,82,2,DateTime(2004,02,05)));
     // Car :: addCar(cars,Car(100003,77,3,DateTime(2005,6,21)));
     // Car :: addCar(cars,Car(100002,82,1,DateTime(2007,1,12)));
 
     // saveToFile(cars,"cars.txt");
 
-    loadFromFile(cars,"cars.txt");
+    // loadFromFile(cars,"cars.txt");
 
     // for(auto& it : cars){
     //     cout << it.id << " " << it.model << " " << it.condition << " The Due date is ";
     //     it.due_date.display() ;
     // }
     
-    auto ptr = Car :: searchCarById(cars, 100007);
-    cout << ptr->id << " " << ptr->model << " " << ptr->condition << " The Due date is ";
-    ptr->due_date.display();
+    // auto ptr = Car :: searchCarById(cars, 100007);
+    // cout << ptr->id << " " << ptr->model << " " << ptr->condition << " The Due date is ";
+    // ptr->due_date.display();
+
+    int k;
+    cout << "Welcome to Car Rental System" << endl ;
+    cout << "----------------------------" << endl ;
+
+    cout << "New user or previous user ?" <<  endl;
+    cout << "0 - New User \n1 - Previous User\n" << endl;
+    
+
 
     /// Driver Code
-    // cin >> k;
-    // string name,password,temp;
-    // int id;
+    cin >> k;
 
-    // switch(k)
-    // {
-    //     //registering a new customer
-    //     case 0 : 
-    //         cout << "Enter your Name : " ;
-    //         cin >> name ;
-    //         cout << endl;
+    switch(k)
+    {
+        //registering a new customer
+        case 0 : 
+                Customer :: addCustomer(customers);
+            break;
+        //previous customer/employee/manager
+        case 1 :
 
-    //         cout << "Enter your Password : ";
-    //         cin >> password ;
-    //         cout << endl;
-
-    //         cout << "Confirm Password : ";
-    //         cin >> temp ;
-    //         cout << endl;
-
-    //         while( temp != password)
-    //         {
-    //             cout << "Passwords don't match!" << endl;
-    //             cout << "Enter your Password : ";
-    //             cin >> password ;
-    //             cout << endl;
-
-    //             cout << "Confirm Password : ";
-    //             cin >> temp ;
-    //             cout << endl;
-    //         }
-
-    //         customers.push_back(Customer(name,id));
-    //         customers.back().set_password(password);
-    //         break;
-    //     //previous customer/employee/manager
-    //     case 1 :
-    //         cout << "Enter your Name : " ;
-    //         cin >> name ;
-    //         cout << endl;
-
-    //         cout << "Enter your Password : ";
-    //         cin >> password ;
-    //         cout << endl;
-    //         break;
-    // }
-
-
-    //         Car Rental
+    }
     return 0;
 }
