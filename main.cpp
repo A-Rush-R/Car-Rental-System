@@ -387,7 +387,7 @@ class Employee : public User
                 return nullptr;
             }
         }
-        
+
         // Function to update an existing Employee in the database
         static void updateEmployee(vector<Employee>& Employees) {
             
@@ -588,8 +588,6 @@ int main()
 
     cout << "New user or previous user ?" <<  endl;
     cout << "0 - New User \n1 - Previous User\n" << endl;
-    
-
 
     /// Driver Code
     cin >> k;
@@ -608,6 +606,11 @@ int main()
             switch(j)
             {
                 case 1: 
+                    break;
+                case 2: 
+                    break;
+                case 3: 
+                    break;
             }
     }
     return 0;
