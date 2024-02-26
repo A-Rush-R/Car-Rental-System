@@ -215,14 +215,19 @@ class Customer : public User
         }
 
         // Function to update an existing Customer in the database
-        static void updateCustomer(vector<Customer>& Customers, int CustomerId, const Customer& updatedCustomer) {
-            auto it = std::lower_bound(Customers.begin(), Customers.end(), CustomerId, [](const Customer& Customer, int id) {
+        static void updateCustomer(vector<Customer>& Customers) {
+            int id;
+            cout << "Enter the id of the Customer to be modified : " ;
+            cin >> id;
+
+            auto it = std::lower_bound(Customers.begin(), Customers.end(), id, [](const Customer& Customer, int id) {
                 return Customer.id < id;
             });
             if (it != Customers.end()) {
-                *it = updatedCustomer;
+                //modify here
+                // *it = updatedCustomer;
             } else {
-                cout << "Customer with ID " << CustomerId << " not found." << endl;
+                cout << "Customer with ID " << id << " not found." << endl;
             }
         }
 
@@ -321,15 +326,21 @@ class Employee : public User
         }
 
         // Function to update an existing Employee in the database
-        static void updateEmployee(vector<Employee>& Employees, int EmployeeId, const Employee& updatedEmployee) {
-            auto it = std::lower_bound(Employees.begin(), Employees.end(), EmployeeId, [](const Employee& Employee, int id) {
+        static void updateEmployee(vector<Employee>& Employees) {
+            
+            int id;
+            cout << "Enter the id of the Customer to be modified : " ;
+            cin >> id;
+
+            auto it = std::lower_bound(Employees.begin(), Employees.end(), id, [](const Employee& Employee, int id) {
                 return Employee.id < id;
             });
 
             if (it != Employees.end()) {
-                *it = updatedEmployee;
+                //modify the employee here
+                // *it = updatedEmployee;
             } else {
-                cout << "Employee with ID " << EmployeeId << " not found." << endl;
+                cout << "Employee with ID " << id << " not found." << endl;
             }
         }
 
