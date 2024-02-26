@@ -12,6 +12,9 @@ using namespace std;
 #define MINOR_SCRATCHES 2
 #define FINE 3
 
+//Employee IDs begin with 2
+//Customer IDs begin with 1
+
 // class Car
 // {
 //     private :
@@ -298,7 +301,15 @@ class Employee : public User
 class Manager : public User 
 {
     public : 
-        void modify_records(vector<Customer>& customers, vector<Car>* cars, vector<Employee>& employees)
+        void show_user_details(vector<Customer>& customers, vector<Employee>& employees)
+        {
+            if (id/100000 == 1)
+                Customer :: show_customers(customers);
+            else
+                Employee :: show_employees(employees);
+        }
+
+        void modify_records(vector<Customer>& customers, vector<Car>& cars, vector<Employee>& employees)
         {
             cout << "Which database is to be modified?\n1 - Customers\n2 - Employees\n3 - Cars" << endl;
             int k,j;
@@ -334,7 +345,7 @@ class Manager : public User
                         customers.back().set_password(password);
                         break;
                     case 3:
-                        /* code */
+                        Customer :: deleteCustomer(customers, id);
                         break;
                     default:
                         break;
