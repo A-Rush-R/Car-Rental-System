@@ -156,7 +156,7 @@ class User
             this->id = id;
             this->password = password;
         }
-        
+
         virtual void show() = 0; //virtual function
 
         bool verify_password(string pass)
@@ -223,7 +223,32 @@ class Customer : public User
             customers.push_back(Customer(name,id));
             customers.back().set_password(password);
         }
+        static Customer* login(vector<Customer>& customers) {
+            string name, password;
+            cout << "Enter Username: ";
+            cin >> name;
+            cout << "Enter Password: ";
+            cin >> password;
 
+            // Search for the customer with the given name
+            auto it = find_if(customers.begin(), customers.end(), [&name](const Customer& customer) {
+                return customer.name == name;
+            });
+
+            // If customer found, check password
+            if (it != customers.end()) {
+                if (it->password == password) {
+                    cout << "Login Successful!" << endl;
+                    return &(*it);
+                } else {
+                    cout << "Incorrect Password!" << endl;
+                    return nullptr;
+                }
+            } else {
+                cout << "Customer not found!" << endl;
+                return nullptr;
+            }
+        }
         // Function to update an existing Customer in the database
         static void updateCustomer(vector<Customer>& Customers) {
             int id;
@@ -336,6 +361,33 @@ class Employee : public User
             employees.back().set_password(password);
         }
 
+        static Employee* login(vector<Employee>& Employees) {
+            string name, password;
+            cout << "Enter Username: ";
+            cin >> name;
+            cout << "Enter Password: ";
+            cin >> password;
+
+            // Search for the Employee with the given name
+            auto it = find_if(Employees.begin(), Employees.end(), [&name](const Employee& Employee) {
+                return Employee.name == name;
+            });
+
+            // If Employee found, check password
+            if (it != Employees.end()) {
+                if (it->password == password) {
+                    cout << "Login Successful!" << endl;
+                    return &(*it);
+                } else {
+                    cout << "Incorrect Password!" << endl;
+                    return nullptr;
+                }
+            } else {
+                cout << "Employee not found!" << endl;
+                return nullptr;
+            }
+        }
+        
         // Function to update an existing Employee in the database
         static void updateEmployee(vector<Employee>& Employees) {
             
@@ -542,15 +594,21 @@ int main()
     /// Driver Code
     cin >> k;
 
+    int j;
     switch(k)
     {
         //registering a new customer
         case 0 : 
-                Customer :: addCustomer(customers);
+            Customer :: addCustomer(customers);
             break;
         //previous customer/employee/manager
         case 1 :
-
+            cout << "Enter the type of user :\n1 - Customer\n2 - Employee\n3 - Manager" << endl;
+            cin >> j;
+            switch(j)
+            {
+                case 1: 
+            }
     }
     return 0;
 }
