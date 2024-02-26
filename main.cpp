@@ -156,7 +156,16 @@ class User
             this->id = id;
             this->password = password;
         }
+        
         virtual void show() = 0; //virtual function
+
+        bool verify_password(string pass)
+        {
+            if(pass == password)
+                return 1;
+            else 
+                return 0;
+        }
     
 };
 
@@ -209,7 +218,8 @@ class Customer : public User
                 cin >> temp ;
                 cout << endl;
             }
-
+            id = customers.back().id + 1;
+            cout << "ID of the new Customer is : " << id << endl;
             customers.push_back(Customer(name,id));
             customers.back().set_password(password);
         }
@@ -320,7 +330,8 @@ class Employee : public User
                 cin >> temp ;
                 cout << endl;
             }
-
+            id = employees.back().id + 1;
+            cout << "ID of the new Employee is : " << id << endl;
             employees.push_back(Employee(name,id));
             employees.back().set_password(password);
         }
