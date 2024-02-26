@@ -361,16 +361,31 @@ class Employee : public User
             employees.back().set_password(password);
         }
 
+        // Function to search for a Employee by ID
+        static Employee* searchEmployeeById(vector<Employee>& Employees, int EmployeeId) {
+            auto it = std::lower_bound(Employees.begin(), Employees.end(), EmployeeId, [](const Employee& Employee, int id) {
+                return Employee.id < id;
+            });
+
+            if (it != Employees.end() && it->id == EmployeeId) {
+                return &(*it); 
+            } else {
+                return nullptr; 
+            }
+        }
+
         static Employee* login(vector<Employee>& Employees) {
-            string name, password;
-            cout << "Enter Username: ";
-            cin >> name;
+            string password;
+            int id;
+            
+            cout << "Enter ID: ";
+            cin >> id;
             cout << "Enter Password: ";
             cin >> password;
 
             // Search for the Employee with the given name
-            auto it = find_if(Employees.begin(), Employees.end(), [&name](const Employee& Employee) {
-                return Employee.name == name;
+            auto it = std :: lower_bound(Employees.begin(), Employees.end(), id,[](const Employee& Employee, int id) {
+                return Employee.id < id;
             });
 
             // If Employee found, check password
@@ -424,18 +439,6 @@ class Employee : public User
             }
         }
 
-        // Function to search for a Employee by ID
-        static Employee* searchEmployeeById(vector<Employee>& Employees, int EmployeeId) {
-            auto it = std::lower_bound(Employees.begin(), Employees.end(), EmployeeId, [](const Employee& Employee, int id) {
-                return Employee.id < id;
-            });
-
-            if (it != Employees.end() && it->id == EmployeeId) {
-                return &(*it); 
-            } else {
-                return nullptr; 
-            }
-        }
 
         static void show_employees(vector<Employee>& Employees)
         {
@@ -447,12 +450,133 @@ class Employee : public User
 class Manager : public User 
 {
     public : 
+        void set_password( string pass) {password = pass;} 
+        Manager(const string& name = "", int id = 0, const string& password = "") : User(name, id, password){}
+
         void show_user_details(vector<Customer>& customers, vector<Employee>& employees)
         {
             if (id/100000 == 1)
                 Customer :: show_customers(customers);
             else
                 Employee :: show_employees(employees);
+        }
+
+        static void addManager(vector<Manager>& Managers) {
+            string name,password,temp;
+            int id;
+
+            cout << "Enter Name : " ;
+            cin >> name ;
+            cout << endl;
+
+            cout << "Enter Password : ";
+            cin >> password ;
+            cout << endl;
+
+            cout << "Confirm Password : ";
+            cin >> temp ;
+            cout << endl;
+
+            while( temp != password)
+            {
+                cout << "Passwords don't match!" << endl;
+                cout << "Enter your Password : ";
+                cin >> password ;
+                cout << endl;
+
+                cout << "Confirm Password : ";
+                cin >> temp ;
+                cout << endl;
+            }
+            id = Managers.back().id + 1;
+            cout << "ID of the new Manager is : " << id << endl;
+            Managers.push_back(Manager(name,id));
+            Managers.back().set_password(password);
+        }
+
+        // Function to search for a Manager by ID
+        static Manager* searchManagerById(vector<Manager>& Managers, int ManagerId) {
+            auto it = std::lower_bound(Managers.begin(), Managers.end(), ManagerId, [](const Manager& Manager, int id) {
+                return Manager.id < id;
+            });
+
+            if (it != Managers.end() && it->id == ManagerId) {
+                return &(*it); 
+            } else {
+                return nullptr; 
+            }
+        }
+
+        static Manager* login(vector<Manager>& Managers) {
+            string password;
+            int id;
+            
+            cout << "Enter ID: ";
+            cin >> id;
+            cout << "Enter Password: ";
+            cin >> password;
+
+            // Search for the Manager with the given name
+            auto it = std :: lower_bound(Managers.begin(), Managers.end(), id,[](const Manager& Manager, int id) {
+                return Manager.id < id;
+            });
+
+            // If Manager found, check password
+            if (it != Managers.end()) {
+                if (it->password == password) {
+                    cout << "Login Successful!" << endl;
+                    return &(*it);
+                } else {
+                    cout << "Incorrect Password!" << endl;
+                    return nullptr;
+                }
+            } else {
+                cout << "Manager not found!" << endl;
+                return nullptr;
+            }
+        }
+
+        // Function to update an existing Manager in the database
+        static void updateManager(vector<Manager>& Managers) {
+            
+            int id;
+            cout << "Enter the id of the Customer to be modified : " ;
+            cin >> id;
+
+            auto it = std::lower_bound(Managers.begin(), Managers.end(), id, [](const Manager& Manager, int id) {
+                return Manager.id < id;
+            });
+
+            if (it != Managers.end()) {
+                //modify the Manager here
+                // *it = updatedManager;
+            } else {
+                cout << "Manager with ID " << id << " not found." << endl;
+            }
+        }
+
+        // Function to delete a Manager from the database
+        static void deleteManager(vector<Manager>& Managers) {
+
+            int id;
+            cout << "Enter the id of the Customer to be deleted : " ;
+            cin >> id;
+
+            auto it = std::lower_bound(Managers.begin(), Managers.end(), id, [](const Manager& Manager, int id) {
+                return Manager.id < id;
+            });
+            if (it != Managers.end()) {
+                Managers.erase(it);
+            } else {
+                cout << "Manager with ID " << id << " not found." << endl;
+            }
+        }
+
+
+        static void show_Managers(vector<Manager>& Managers)
+        {
+            for(auto& it : Managers)
+                it.show();
         }
 
         void modify_records(vector<Customer>& customers, vector<Car>& cars, vector<Employee>& employees)
@@ -560,6 +684,7 @@ int main()
     vector<Car> cars;
     vector<Customer> customers;
     vector<Employee> employees;
+    vector<Manager> managers;
 
     // loadFromFile(cars, "cars.txt");
     // loadFromFile(customers, "customers.txt")
@@ -606,10 +731,13 @@ int main()
             switch(j)
             {
                 case 1: 
+                    auto it = Customer :: login(customers);
                     break;
-                case 2: 
+                case 2:
+                    auto it = Employee :: login(employees);
                     break;
-                case 3: 
+                case 3:
+                    auto it = Manager :: login(managers);
                     break;
             }
     }
