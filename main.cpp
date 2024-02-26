@@ -915,3 +915,5 @@ int main()
     }
     return 0;
 }
+
+//define the load and save function for other classes
