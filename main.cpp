@@ -7,14 +7,16 @@
 #include "DateTime.h"
 #include<cassert>
 #include<regex>
-using namespace std;
 #define PENALTY_CUSTOMER 200
 #define HEAVY_DAMAGE 0
 #define LIGHT_DAMAGE 1
 #define MINOR_SCRATCHES 2
 #define FINE 3
+#define CUSTOMER_BEGIN_ID 100001
+#define EMPLOYEE_BEGIN_ID 200001
 int AVG_CUSTOMER_RECORD = 100;
 int AVG_EMPLOYEE_RECORD=  200;
+using namespace std;
 
 //Employee IDs begin with 2
 //Customer IDs begin with 1
@@ -211,9 +213,19 @@ class Customer : public User
             string name,password,temp;
             int id;
 
-            cout << "Enter Name : " ;
+            cout << "Enter Name (no spaces): " ;
             cin >> name ;
             cout << endl;
+
+            auto it = find_if(customers.begin(), customers.end(), [&name](const Customer& customer) {
+                return customer.name == name;
+            });
+
+            if(it != customers.end())
+            {
+                cout << "The User already exists!" << endl;
+                return ;
+            }
 
             cout << "Enter Password : ";
             cin >> password ;
@@ -226,7 +238,7 @@ class Customer : public User
             while( temp != password)
             {
                 cout << "Passwords don't match!" << endl;
-                cout << "Enter your Password : ";
+                cout << "Enter Password : ";
                 cin >> password ;
                 cout << endl;
 
@@ -235,10 +247,14 @@ class Customer : public User
                 cout << endl;
             }
 
-            id = customers.back().id + 1;
+            if(!customers.empty())
+                id = customers.back().id + 1;
+            else
+                id = CUSTOMER_BEGIN_ID;
+            // cout << "DEBUGGING" << endl;
+
             cout << "ID of the new Customer is : " << id << endl;
-            customers.push_back(Customer(name,id));
-            customers.back().set_password(password);
+            customers.push_back(Customer(name,id,password));
         }
 
         static Customer* login(vector<Customer>& customers) {
@@ -426,9 +442,19 @@ class Employee : public User
             string name,password,temp;
             int id;
 
-            cout << "Enter Name : " ;
+            cout << "Enter Name (no spaces): " ;
             cin >> name ;
             cout << endl;
+
+            auto it = find_if(employees.begin(), employees.end(), [&name](const Employee& employee) {
+                return employee.name == name;
+            });
+
+            if(it != employees.end())
+            {
+                cout << "The Employee already exists!" << endl;
+                return ;
+            }
 
             cout << "Enter Password : ";
             cin >> password ;
@@ -449,10 +475,13 @@ class Employee : public User
                 cin >> temp ;
                 cout << endl;
             }
-            id = employees.back().id + 1;
+
+            if(!employees.empty())
+                id = employees.back().id + 1;
+            else 
+                id = EMPLOYEE_BEGIN_ID;
             cout << "ID of the new Employee is : " << id << endl;
-            employees.push_back(Employee(name,id));
-            employees.back().set_password(password);
+            employees.push_back(Employee(name,id,password));
         }
 
         // Function to search for a Employee by ID
@@ -635,7 +664,7 @@ class Manager : public User
             string name,password,temp;
             int id;
 
-            cout << "Enter Name : " ;
+            cout << "Enter Name (no spaces): " ;
             cin >> name ;
             cout << endl;
 
@@ -873,13 +902,14 @@ void saveToFile(const vector<Customer>& customers, const string& filename) {
     ofstream outFile(filename);
     if (outFile.is_open()) {
         for (const auto& customer : customers) {
-            outFile << customer.id << " " << customer.name << " " << customer.password  << " " << customer.fine_due << " " << customer.record << endl;
+            outFile << customer.id << " " << customer.name << " " << customer.password  << " " << customer.fine_due << " " << customer.record ;
             // cout << Customer.id << " " << Customer.model << " " << Customer.condition << endl;
 
             outFile << " " << customer.rented_cars.size(); 
             for (int carID : customer.rented_cars) {
                 outFile << " " << carID; 
             }
+            outFile << endl;
 
         }
         outFile.close();
@@ -919,14 +949,14 @@ void saveToFile(const vector<Employee>& employees, const string& filename) {
     ofstream outFile(filename);
     if (outFile.is_open()) {
         for (const auto& employee : employees) {
-            outFile << employee.id << " " << employee.name << " " << employee.password  << " " << employee.fine_due << " " << employee.record << endl;
+            outFile << employee.id << " " << employee.name << " " << employee.password  << " " << employee.fine_due << " " << employee.record;
             // cout << employee.id << " " << employee.model << " " << employee.condition << endl;
 
             outFile << " " << employee.rented_cars.size(); 
             for (int carID : employee.rented_cars) {
                 outFile << " " << carID; 
             }
-
+            outFile << endl;
         }
         outFile.close();
         cout << "Records saved to " << filename << endl;
@@ -1035,6 +1065,7 @@ int main()
         //registering a new customer
         case 0 : 
             Customer :: addCustomer(customers);
+            cout << "Customer registered successfully, run again to login" << endl;
             break;
         //previous customer/employee/manager
         case 1 :
@@ -1060,6 +1091,6 @@ int main()
             }
     }
     save(cars,customers,employees,managers);
-    
+
     return 0;
 }
