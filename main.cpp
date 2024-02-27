@@ -80,7 +80,7 @@ public:
                 condition_name = "Fine";
                 break;
         }
-        cout << id << " " << model << " " << condition_name << " " << status << " ";
+        cout << id << " " << model << " " << condition_name << " " << status << " " << ownerID << " ";
         due_date.display();
     }
 
@@ -93,12 +93,12 @@ public:
     DateTime show_due_date() { return due_date; }
 
     // Function to add a new car to the database
-    static void addCar(vector<Car>& cars, const Car& newCar) {
-        cars.push_back(newCar);
+    static void addCar(vector<Car>& cars) {
+        // cars.push_back(newCar);
     }
 
     // Function to update an existing car in the database
-    static void updateCar(vector<Car>& cars, int carId, const Car& updatedCar) {
+    static void updateCar(vector<Car>& cars) {
         auto it = std::lower_bound(cars.begin(), cars.end(), carId, [](const Car& car, int id) {
             return car.id < id;
         });
@@ -110,7 +110,7 @@ public:
     }
 
     // Function to delete a car from the database
-    static void deleteCar(vector<Car>& cars, int carId) {
+    static void deleteCar(vector<Car>& cars) {
         auto it = std::lower_bound(cars.begin(), cars.end(), carId, [](const Car& car, int id) {
             return car.id < id;
         });
@@ -340,7 +340,7 @@ class Customer : public User
             cout << "Welcome " << name << endl;
             cout << "-----------------" << endl;
             int k;
-            cout << "Choose an option\n1 - Show Available Cars\n2 - Rent a Car\n3 - Return a Car" << endl;
+            cout << "Choose an option\n1 - Show Available Cars\n2 - Rent a Car\n3 - Return a Car\n4 - Exit" << endl;
             cin >> k;
 
             char delimiter;
@@ -374,8 +374,6 @@ class Customer : public User
                     }
                     else
                         cout << "This car is not available for rental" << endl;
-
-                    begin_session(cars);
                     break;
 
                 case 3 :
@@ -389,7 +387,6 @@ class Customer : public User
                     if (regex_match(date, pattern)) {}
                     else {
                         cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
-                        begin_session(cars);
                     }
 
                     carIt = Car :: searchCarById(cars,carID);
@@ -402,12 +399,15 @@ class Customer : public User
                     fine_due += diff*PENALTY_CUSTOMER;
 
                     break;
-
+                
+                case 4 :
+                    return;
+                    break;
                 default :
                     cout << "Enter a valid option" << endl;
-                    begin_session(cars);
                     break;
             }
+            begin_session(cars);
         }
 };
 
@@ -777,7 +777,7 @@ class Manager : public User
         }
 
 
-        static void show_Managers(vector<Manager>& Managers)
+        static void show_managers(vector<Manager>& Managers)
         {
             for(auto& it : Managers)
                 it.show();
@@ -837,6 +837,26 @@ class Manager : public User
                     }
                     break ;
                 case 3 : 
+                    cout << "Choose the operation you want to perform\n1 - Add\n2 - Update\n3 - Delete" << endl;
+                    cin >> j;
+
+                    switch (j)
+                    {
+                    case 1:
+                        Car :: addCar(cars);
+                        break;
+                    case 2:
+                        Car :: updateCar(cars);
+                        break;
+                    case 3:
+                        Car :: deleteCar(cars);
+                        break;
+                    default:
+                        cout << "Incorrect Option !" << endl;
+                        modify_records(customers,cars,employees);
+
+                        break;
+                    }
                     break;
                 default : cout << "Please enter a valid number!" << endl;
                     modify_records(customers,cars,employees);
@@ -875,7 +895,7 @@ void saveToFile(const vector<Car>& cars, const string& filename) {
     ofstream outFile(filename);
     if (outFile.is_open()) {
         for (const auto& car : cars) {
-            outFile << car.id << " " << car.model << " " << car.condition << " " << car.due_date.getYear() << " " << car.due_date.getMonth() << " " << car.due_date.getDay() << endl;
+            outFile << car.id << " " << car.model << " " << car.condition << " " << car.ownerID << " " << car.due_date.getYear() << " " << car.due_date.getMonth() << " " << car.due_date.getDay() << endl;
             // cout << car.id << " " << car.model << " " << car.condition << endl;
         }
         outFile.close();
@@ -889,13 +909,11 @@ void loadFromFile(vector<Car>& cars, const string& filename) {
     ifstream inFile(filename);
     if (inFile.is_open()) {
         cars.clear(); // Clear existing data
-        int id, model, condition;
+        int id, model, condition, ownerID;
         int y,m,d;
 
-        while (inFile >> id >> model >> condition >> y >> m >> d) {
-            DateTime due_date(y,m,d);
-            Car car(id,model,condition,due_date);
-            cars.push_back(car);
+        while (inFile >> id >> model >> condition >> ownerID >> y >> m >> d) {
+            cars.push_back(Car(id,model,condition,DateTime(y,m,d),ownerID));
         }
         inFile.close();
         cout << "Records loaded from " << filename << endl;
@@ -1100,3 +1118,9 @@ int main()
 
     return 0;
 }
+
+// add functionality of setting up the due date after car is rented
+// add renting cost
+// add car database functions
+// add how record is modified
+// add how condition of car is assessed after return
