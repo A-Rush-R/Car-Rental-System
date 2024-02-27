@@ -272,6 +272,7 @@ class Customer : public User
             // If customer found, check password
             if (it != customers.end()) {
                 if (it->password == password) {
+                    cout << "-----------------" << endl;
                     cout << "Login Successful!" << endl;
                     return &(*it);
                 } else {
@@ -337,6 +338,7 @@ class Customer : public User
         void begin_session(vector<Car>& cars)
         {
             cout << "Welcome " << name << endl;
+            cout << "-----------------" << endl;
             int k;
             cout << "Choose an option\n1 - Show Available Cars\n2 - Rent a Car\n3 - Return a Car" << endl;
             cin >> k;
@@ -514,6 +516,7 @@ class Employee : public User
             // If Employee found, check password
             if (it != Employees.end()) {
                 if (it->password == password) {
+                    cout << "-----------------" << endl;
                     cout << "Login Successful!" << endl;
                     return &(*it);
                 } else {
@@ -572,6 +575,7 @@ class Employee : public User
         void begin_session(vector<Car>& cars)
         {
             cout << "Welcome " << name << endl;
+            cout << "-----------------" << endl;
             int k;
             cout << "Choose an option\n1 - Show Available Cars\n2 - Rent a Car\n3 - Return a Car" << endl;
             cin >> k;
@@ -723,6 +727,7 @@ class Manager : public User
             // If Manager found, check password
             if (it != Managers.end()) {
                 if (it->password == password) {
+                    cout << "-----------------" << endl;
                     cout << "Login Successful!" << endl;
                     return &(*it);
                 } else {
@@ -846,6 +851,7 @@ class Manager : public User
         void begin_session(vector<Customer>& customers, vector<Car>& cars, vector<Employee>& employees)
         {
             cout << "Welcome " << name << endl;
+            cout << "-----------------" << endl;
             cout << "Choose an option\n1 - View Car Database\n2 - Modify the Records" << endl;
             int k;
             cin >> k;
