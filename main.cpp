@@ -17,11 +17,13 @@
 #define MANAGER_BEGIN_ID 400001
 #define CAR_BEGIN_ID 100001
 int AVG_CUSTOMER_RECORD = 100;
-int AVG_EMPLOYEE_RECORD=  200;
+int AVG_EMPLOYEE_RECORD = 100;
 using namespace std;
 
-//Employee IDs begin with 2
-//Customer IDs begin with 1
+// Car IDs begin with 1
+// Customer IDs begin with 2
+// Employee IDs begin with 3
+// Manager IDs begin with 4
 
 int operator-(const DateTime& date1, const DateTime& date2) {
     int days1 = date1.getYear() * 365 + (date1.getYear() / 4 - date1.getYear() / 100 + date1.getYear() / 400);
