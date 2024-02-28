@@ -14,6 +14,7 @@
 #define FINE 4
 #define CUSTOMER_BEGIN_ID 200001
 #define EMPLOYEE_BEGIN_ID 300001
+#define MANAGER_BEGIN_ID 400001
 #define CAR_BEGIN_ID 100001
 int AVG_CUSTOMER_RECORD = 100;
 int AVG_EMPLOYEE_RECORD=  200;
@@ -192,12 +193,11 @@ class Car {
             }
         }
 
-        static void showcars(vector<Car>& cars,vector<int>& carIDs, int userID = 0)
+        static void showcars(vector<Car>& cars, int userID)
         {
-            if(userID == 0)
-                for(int carID : carIDs){
-                    auto item = Car :: searchCarById(cars,carID);
-                    item->show();
+            if(userID / 100000 == 4) //for manager
+                for(auto& it : cars){
+                    it.show();
                 }
             else
                 for(auto& it : cars)
@@ -205,12 +205,6 @@ class Car {
                     if(it.ownerID == userID || it.ownerID == 0)
                         it.show();
                 }
-        }
-        static void showcars(vector<Car>& cars)
-        {
-            for(auto& it  : cars){
-                it.show();
-            }
         }
         static void saveToFile(const vector<Car>& cars, const string& filename) {
             ofstream outFile(filename);
@@ -459,14 +453,14 @@ class Customer : public User
             switch(k)
             {
                 case 1 :
-                    Car :: showcars(cars, rented_cars, id);
+                    Car :: showcars(cars,id);
                     break;
                 case 2 :
                     rent_request(cars);
                     break;
 
                 case 3 :
-                    cout << "Enter the id of the car to be returned" << endl;
+                    cout << "Enter the id of the car to be returned : " ;
                     cin >> carID;
                     cout << "Enter the date of return in DD-MM-YYYY format : ";
                     cin >> date;
@@ -749,16 +743,18 @@ class Employee : public User
             switch(k)
             {
                 case 1 :
-                    Car :: showcars(cars, rented_cars, id);
+                    Car :: showcars(cars,id);
                     break;
                 case 2 :
                     rent_request(cars);
                     break;
                 case 3 :
-                    cout << "Enter the id of the car to be returned" << endl;
+                    cout << "Enter the id of the car to be returned : ";
                     cin >> carID;
+
                     cout << "Enter the date of return in DD-MM-YYYY format : ";
                     cin >> date;
+
 
                     carIt = Car :: searchCarById(cars,carID);
                     carIt->ownerID = 0;
@@ -1058,7 +1054,7 @@ class Manager : public User
             switch(k)
             {
                 case 1:
-                    Car :: showcars(cars);
+                    Car :: showcars(cars,id);
                     break;
                 case 2:
                     modify_records(customers,cars,employees);
