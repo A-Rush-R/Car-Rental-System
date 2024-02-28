@@ -895,8 +895,8 @@ class Manager : public User
             cin >> password;
 
             // Search for the Manager with the given name
-            auto it = lower_bound(Managers.begin(), Managers.end(), id,[](const Manager& Manager, int id) {
-                return Manager.id < id;
+            auto it = lower_bound(Managers.begin(), Managers.end(), id,[](const Manager& manager, int id) {
+                return manager.id < id;
             });
 
             // If Manager found, check password
