@@ -154,6 +154,36 @@ public:
             it.show();
         }
     }
+    static void saveToFile(const vector<Car>& cars, const string& filename) {
+        ofstream outFile(filename);
+        if (outFile.is_open()) {
+            for (const auto& car : cars) {
+                outFile << car.id << " " << car.model << " " << car.condition << " " << car.ownerID << " " << car.due_date.getYear() << " " << car.due_date.getMonth() << " " << car.due_date.getDay() << endl;
+                // cout << car.id << " " << car.model << " " << car.condition << endl;
+            }
+            outFile.close();
+            cout << "Records saved to " << filename << endl;
+        } else {
+            cerr << "Unable to open file " << filename << endl;
+        }
+    }
+
+    static void loadFromFile(vector<Car>& cars, const string& filename) {
+        ifstream inFile(filename);
+        if (inFile.is_open()) {
+            cars.clear(); // Clear existing data
+            int id, model, condition, ownerID;
+            int y,m,d;
+
+            while (inFile >> id >> model >> condition >> ownerID >> y >> m >> d) {
+                cars.push_back(Car(id,model,condition,DateTime(y,m,d),ownerID));
+            }
+            inFile.close();
+            cout << "Records loaded from " << filename << endl;
+        } else {
+            cerr << "Unable to open file " << filename << endl;
+        }
+    }
 };
 
 class User
@@ -409,6 +439,51 @@ class Customer : public User
             }
             begin_session(cars);
         }
+        static void saveToFile(const vector<Customer>& customers, const string& filename) {
+            ofstream outFile(filename);
+            if (outFile.is_open()) {
+                for (const auto& customer : customers) {
+                    outFile << customer.id << " " << customer.name << " " << customer.password  << " " << customer.fine_due << " " << customer.record ;
+                    // cout << Customer.id << " " << Customer.model << " " << Customer.condition << endl;
+
+                    outFile << " " << customer.rented_cars.size(); 
+                    for (int carID : customer.rented_cars) {
+                        outFile << " " << carID; 
+                    }
+                    outFile << endl;
+
+                }
+                outFile.close();
+                cout << "Records saved to " << filename << endl;
+            } else {
+                cerr << "Unable to open file " << filename << endl;
+            }
+        }
+
+        static void loadFromFile(vector<Customer>& customers, const string& filename) {
+            ifstream inFile(filename);
+            if (inFile.is_open()) {
+                customers.clear(); // Clear existing data
+                int id, fine_due, record, numCars,carID;
+                string name,password;
+                vector<int> rented_cars;
+
+                while (inFile >> id >> name >> password >> fine_due >> record >> numCars) {
+
+                    for(int i=0 ; i<numCars ; i++)
+                    {
+                        cin >> carID;
+                        rented_cars.push_back(carID);
+                    }
+
+                    customers.push_back(Customer(name,id,password,fine_due,record,rented_cars));
+                }
+                inFile.close();
+                cout << "Records loaded from " << filename << endl;
+            } else {
+                cerr << "Unable to open file " << filename << endl;
+            }
+        }
 };
 
 class Employee : public User 
@@ -644,6 +719,50 @@ class Employee : public User
                     cout << "Enter a valid option" << endl;
                     begin_session(cars);
                     break;
+            }
+        }
+        static void saveToFile(const vector<Employee>& employees, const string& filename) {
+            ofstream outFile(filename);
+            if (outFile.is_open()) {
+                for (const auto& employee : employees) {
+                    outFile << employee.id << " " << employee.name << " " << employee.password  << " " << employee.fine_due << " " << employee.record;
+                    // cout << employee.id << " " << employee.model << " " << employee.condition << endl;
+
+                    outFile << " " << employee.rented_cars.size(); 
+                    for (int carID : employee.rented_cars) {
+                        outFile << " " << carID; 
+                    }
+                    outFile << endl;
+                }
+                outFile.close();
+                cout << "Records saved to " << filename << endl;
+            } else {
+                cerr << "Unable to open file " << filename << endl;
+            }
+        }
+
+        static void loadFromFile(vector<Employee>& employees, const string& filename) {
+            ifstream inFile(filename);
+            if (inFile.is_open()) {
+                employees.clear(); // Clear existing data
+                int id, fine_due, record, numCars,carID;
+                string name,password;
+                vector<int> rented_cars;
+
+                while (inFile >> id >> name >> password >> fine_due >> record >> numCars) {
+
+                    for(int i=0 ; i<numCars ; i++)
+                    {
+                        cin >> carID;
+                        rented_cars.push_back(carID);
+                    }
+
+                    employees.push_back(Employee(name,id,password,fine_due,record,rented_cars));
+                }
+                inFile.close();
+                cout << "Records loaded from " << filename << endl;
+            } else {
+                cerr << "Unable to open file " << filename << endl;
             }
         }
 };
@@ -889,178 +1008,53 @@ class Manager : public User
                     begin_session(customers,cars,employees);
             }
         }
+        static void saveToFile(const vector<Manager>& managers, const string& filename) {
+            ofstream outFile(filename);
+            if (outFile.is_open()) {
+                for (const auto& manager : managers) {
+                    outFile << manager.id << " " << manager.name << " " << manager.password  << endl;
+
+                }
+                outFile.close();
+                cout << "Records saved to " << filename << endl;
+            } else {
+                cerr << "Unable to open file " << filename << endl;
+            }
+        }
+
+        static void loadFromFile(vector<Manager>& managers, const string& filename) {
+            ifstream inFile(filename);
+            if (inFile.is_open()) {
+                managers.clear(); // Clear existing data
+                int id;
+                string name,password;
+
+                while (inFile >> id >> name >> password) {
+
+                    managers.push_back(Manager(name,id,password));
+                }
+                inFile.close();
+                cout << "Records loaded from " << filename << endl;
+            } else {
+                cerr << "Unable to open file " << filename << endl;
+            }
+        }
 };
-
-void saveToFile(const vector<Car>& cars, const string& filename) {
-    ofstream outFile(filename);
-    if (outFile.is_open()) {
-        for (const auto& car : cars) {
-            outFile << car.id << " " << car.model << " " << car.condition << " " << car.ownerID << " " << car.due_date.getYear() << " " << car.due_date.getMonth() << " " << car.due_date.getDay() << endl;
-            // cout << car.id << " " << car.model << " " << car.condition << endl;
-        }
-        outFile.close();
-        cout << "Records saved to " << filename << endl;
-    } else {
-        cerr << "Unable to open file " << filename << endl;
-    }
-}
-
-void loadFromFile(vector<Car>& cars, const string& filename) {
-    ifstream inFile(filename);
-    if (inFile.is_open()) {
-        cars.clear(); // Clear existing data
-        int id, model, condition, ownerID;
-        int y,m,d;
-
-        while (inFile >> id >> model >> condition >> ownerID >> y >> m >> d) {
-            cars.push_back(Car(id,model,condition,DateTime(y,m,d),ownerID));
-        }
-        inFile.close();
-        cout << "Records loaded from " << filename << endl;
-    } else {
-        cerr << "Unable to open file " << filename << endl;
-    }
-}
-
-void saveToFile(const vector<Customer>& customers, const string& filename) {
-    ofstream outFile(filename);
-    if (outFile.is_open()) {
-        for (const auto& customer : customers) {
-            outFile << customer.id << " " << customer.name << " " << customer.password  << " " << customer.fine_due << " " << customer.record ;
-            // cout << Customer.id << " " << Customer.model << " " << Customer.condition << endl;
-
-            outFile << " " << customer.rented_cars.size(); 
-            for (int carID : customer.rented_cars) {
-                outFile << " " << carID; 
-            }
-            outFile << endl;
-
-        }
-        outFile.close();
-        cout << "Records saved to " << filename << endl;
-    } else {
-        cerr << "Unable to open file " << filename << endl;
-    }
-}
-
-void loadFromFile(vector<Customer>& customers, const string& filename) {
-    ifstream inFile(filename);
-    if (inFile.is_open()) {
-        customers.clear(); // Clear existing data
-        int id, fine_due, record, numCars,carID;
-        string name,password;
-        vector<int> rented_cars;
-
-        while (inFile >> id >> name >> password >> fine_due >> record >> numCars) {
-
-            for(int i=0 ; i<numCars ; i++)
-            {
-                cin >> carID;
-                rented_cars.push_back(carID);
-            }
-
-            customers.push_back(Customer(name,id,password,fine_due,record,rented_cars));
-        }
-        inFile.close();
-        cout << "Records loaded from " << filename << endl;
-    } else {
-        cerr << "Unable to open file " << filename << endl;
-    }
-}
-
-
-void saveToFile(const vector<Employee>& employees, const string& filename) {
-    ofstream outFile(filename);
-    if (outFile.is_open()) {
-        for (const auto& employee : employees) {
-            outFile << employee.id << " " << employee.name << " " << employee.password  << " " << employee.fine_due << " " << employee.record;
-            // cout << employee.id << " " << employee.model << " " << employee.condition << endl;
-
-            outFile << " " << employee.rented_cars.size(); 
-            for (int carID : employee.rented_cars) {
-                outFile << " " << carID; 
-            }
-            outFile << endl;
-        }
-        outFile.close();
-        cout << "Records saved to " << filename << endl;
-    } else {
-        cerr << "Unable to open file " << filename << endl;
-    }
-}
-
-void loadFromFile(vector<Employee>& employees, const string& filename) {
-    ifstream inFile(filename);
-    if (inFile.is_open()) {
-        employees.clear(); // Clear existing data
-        int id, fine_due, record, numCars,carID;
-        string name,password;
-        vector<int> rented_cars;
-
-        while (inFile >> id >> name >> password >> fine_due >> record >> numCars) {
-
-            for(int i=0 ; i<numCars ; i++)
-            {
-                cin >> carID;
-                rented_cars.push_back(carID);
-            }
-
-            employees.push_back(Employee(name,id,password,fine_due,record,rented_cars));
-        }
-        inFile.close();
-        cout << "Records loaded from " << filename << endl;
-    } else {
-        cerr << "Unable to open file " << filename << endl;
-    }
-}
-
-
-void saveToFile(const vector<Manager>& managers, const string& filename) {
-    ofstream outFile(filename);
-    if (outFile.is_open()) {
-        for (const auto& manager : managers) {
-            outFile << manager.id << " " << manager.name << " " << manager.password  << endl;
-
-        }
-        outFile.close();
-        cout << "Records saved to " << filename << endl;
-    } else {
-        cerr << "Unable to open file " << filename << endl;
-    }
-}
-
-void loadFromFile(vector<Manager>& managers, const string& filename) {
-    ifstream inFile(filename);
-    if (inFile.is_open()) {
-        managers.clear(); // Clear existing data
-        int id;
-        string name,password;
-
-        while (inFile >> id >> name >> password) {
-
-            managers.push_back(Manager(name,id,password));
-        }
-        inFile.close();
-        cout << "Records loaded from " << filename << endl;
-    } else {
-        cerr << "Unable to open file " << filename << endl;
-    }
-}
 
 void load(vector<Car>& cars, vector<Customer>& customers, vector<Employee>& employees, vector<Manager> managers)
 {
-    loadFromFile(cars,"cars.txt");
-    loadFromFile(customers,"customers.txt");
-    loadFromFile(employees,"employees.txt");
-    loadFromFile(managers,"managers.txt");
+    Car :: loadFromFile(cars,"cars.txt");
+    Customer :: loadFromFile(customers,"customers.txt");
+    Employee :: loadFromFile(employees,"employees.txt");
+    Manager :: loadFromFile(managers,"managers.txt");
 }
 
 void save(vector<Car>& cars, vector<Customer>& customers, vector<Employee>& employees, vector<Manager> managers)
 {
-    saveToFile(cars,"cars.txt");
-    saveToFile(customers,"customers.txt");
-    saveToFile(employees,"employees.txt");
-    saveToFile(managers,"managers.txt");
+    Car :: saveToFile(cars,"cars.txt");
+    Customer :: saveToFile(customers,"customers.txt");
+    Employee :: saveToFile(employees,"employees.txt");
+    Manager :: saveToFile(managers,"managers.txt");
 }
 
 int main()
@@ -1119,7 +1113,6 @@ int main()
     return 0;
 }
 
-// load and save functions also in the class defintion 
 // keep the classes and header fucntions separately
 // add functionality of setting up the due date after car is rented
 // add renting cost
