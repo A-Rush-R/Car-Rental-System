@@ -200,7 +200,7 @@ class User
             this->password = password;
         }
 
-        virtual void show() = 0; //virtual function
+        virtual void show() = 0; 
 
         bool verify_password(string pass)
         {
@@ -209,8 +209,6 @@ class User
             else 
                 return 0;
         }
-        // virtual void begin_session() = 0;
-    
 };
 
 class Customer : public User 
@@ -223,7 +221,6 @@ class Customer : public User
         void set_password(string pass) {password = pass;}
         Customer(const string& name = "", int id = 0, const string& password = "", int fine_due = 0, int record = AVG_CUSTOMER_RECORD,const vector<int>& rented_cars = {}) : User(name, id, password), fine_due(fine_due), record(record), rented_cars(rented_cars) {}
 
-        friend void saveToFile(const vector<Customer>& customers, const string& filename);
         void clear_due()
         {
             fine_due = 0;
@@ -494,7 +491,6 @@ class Employee : public User
 
     public : 
         Employee(const string& name = "", int id = 0, const string& password = "", int fine_due = 0, int record = AVG_EMPLOYEE_RECORD,const vector<int>& rented_cars = {}) : User(name, id, password), fine_due(fine_due), record(record), rented_cars(rented_cars) {}
-        friend void saveToFile(const vector<Employee>& employees, const string& filename);
         void set_password(string pass)
         {
             password = pass;
@@ -770,8 +766,6 @@ class Employee : public User
 class Manager : public User 
 {
     public : 
-        friend void saveToFile(const vector<Manager>& managers, const string& filename);
-
         void set_password( string pass) {password = pass;} 
         Manager(const string& name = "", int id = 0, const string& password = "") : User(name, id, password){}
 
@@ -1113,7 +1107,7 @@ int main()
     return 0;
 }
 
-// keep the classes and header fucntions separately
+// keep the classes and header functions separately
 // add functionality of setting up the due date after car is rented
 // add renting cost
 // add car database functions
