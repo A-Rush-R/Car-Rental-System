@@ -8,12 +8,13 @@
 #include<cassert>
 #include<regex>
 #define PENALTY_CUSTOMER 200
-#define HEAVY_DAMAGE 0
-#define LIGHT_DAMAGE 1
-#define MINOR_SCRATCHES 2
-#define FINE 3
-#define CUSTOMER_BEGIN_ID 100001
-#define EMPLOYEE_BEGIN_ID 200001
+#define HEAVY_DAMAGE 1
+#define LIGHT_DAMAGE 2
+#define MINOR_SCRATCHES 3
+#define FINE 4
+#define CUSTOMER_BEGIN_ID 200001
+#define EMPLOYEE_BEGIN_ID 300001
+#define CAR_BEGIN_ID 100001
 int AVG_CUSTOMER_RECORD = 100;
 int AVG_EMPLOYEE_RECORD=  200;
 using namespace std;
@@ -37,153 +38,211 @@ int operator-(const DateTime& date1, const DateTime& date2) {
     return days1 - days2;
 }
 
-void parse_date(string date, int* d,int* m,int* y)
+bool parse_date(string date, int* d,int* m,int* y)
 {
-    // Input string stream for parsing
-    std::istringstream iss(date);
-
-    // Parsing day, month, and year from the string
+    regex pattern("\\b\\d{2}-\\d{2}-\\d{4}\\b");
     char delimiter;
-    iss >> *d >> delimiter >> *m >> delimiter >> *y;
+    istringstream iss(date);
+    if(regex_match(date,pattern))
+    {
+        iss >> *d >> delimiter >> *m >> delimiter >> *y;
+        return 1;
+    }
+    else 
+        return 0;
 }
 
 class Car {
 
-public:
-    DateTime due_date;
-    int id;
-    int model;
-    int condition;
-    int ownerID;
+    public:
+        DateTime due_date;
+        int id;
+        string model;
+        int condition;
+        int ownerID;
 
-    Car(int id = 0, int model = 0, int condition = 0,DateTime due_date = DateTime(0,0,0), int ownerID = 0) : id(id), model(model), condition(condition), due_date(due_date), ownerID(ownerID){}
+        Car(string model = 0, int id = 0, int condition = 0,DateTime due_date = DateTime(0,0,0), int ownerID = 0) : id(id), model(model), condition(condition), due_date(due_date), ownerID(ownerID){}
 
-    void show() const
-    {
-        string status = ownerID == 0 ? "Available" : "Rented"; 
-        cout << "ID   Model    Condition    Status" << endl;
-        string condition_name;
+        void show() const
+        {
+            string status = ownerID == 0 ? "Available" : "Rented"; 
+            cout << "ID   Model    Condition    Status" << endl;
+            string condition_name;
 
-        assert(condition <= FINE && condition >= HEAVY_DAMAGE);
+            assert(condition <= FINE && condition >= HEAVY_DAMAGE);
 
-        switch(condition) {
-            case HEAVY_DAMAGE:
-                condition_name = "Heavy Damage";
-                break;
-            case LIGHT_DAMAGE:
-                condition_name = "Light Damage";
-                break;
-            case MINOR_SCRATCHES:
-                condition_name = "Minor Scratches";
-                break;
-            case FINE:
-                condition_name = "Fine";
-                break;
-        }
-        cout << id << " " << model << " " << condition_name << " " << status << " " << ownerID << " ";
-        due_date.display();
-    }
-
-    int rent_request() {
-        // code here
-        return 0;
-    }
-
-
-    DateTime show_due_date() { return due_date; }
-
-    // Function to add a new car to the database
-    static void addCar(vector<Car>& cars) {
-        // cars.push_back(newCar);
-    }
-
-    // Function to update an existing car in the database
-    static void updateCar(vector<Car>& cars) {
-        auto it = std::lower_bound(cars.begin(), cars.end(), carId, [](const Car& car, int id) {
-            return car.id < id;
-        });
-        if (it != cars.end()) {
-            *it = updatedCar;
-        } else {
-            cout << "Car with ID " << carId << " not found." << endl;
-        }
-    }
-
-    // Function to delete a car from the database
-    static void deleteCar(vector<Car>& cars) {
-        auto it = std::lower_bound(cars.begin(), cars.end(), carId, [](const Car& car, int id) {
-            return car.id < id;
-        });
-        if (it != cars.end()) {
-            cars.erase(it);
-        } else {
-            cout << "Car with ID " << carId << " not found." << endl;
-        }
-    }
-
-    // Function to search for a car by ID
-    static Car* searchCarById(vector<Car>& cars, int carId) {
-        auto it = std::lower_bound(cars.begin(), cars.end(), carId, [](const Car& car, int id) {
-            return car.id < id;
-        });
-
-        if (it != cars.end() && it->id == carId) {
-            return &(*it); 
-        } else {
-            return nullptr; 
-        }
-    }
-
-    static void showcars(vector<Car>& cars,vector<int>& carIDs, int userID = 0)
-    {
-        if(userID == 0)
-            for(int carID : carIDs){
-                auto item = Car :: searchCarById(cars,carID);
-                item->show();
+            switch(condition) {
+                case HEAVY_DAMAGE:
+                    condition_name = "Heavy Damage";
+                    break;
+                case LIGHT_DAMAGE:
+                    condition_name = "Light Damage";
+                    break;
+                case MINOR_SCRATCHES:
+                    condition_name = "Minor Scratches";
+                    break;
+                case FINE:
+                    condition_name = "Fine";
+                    break;
             }
-        else
-            for(auto& it : cars)
-            {
-                if(it.ownerID == userID || it.ownerID == 0)
-                    it.show();
-            }
-    }
-    static void showcars(vector<Car>& cars)
-    {
-        for(auto& it  : cars){
-            it.show();
+            cout << id << " " << model << " " << condition_name << " " << status << " " << ownerID << " ";
+            due_date.display();
         }
-    }
-    static void saveToFile(const vector<Car>& cars, const string& filename) {
-        ofstream outFile(filename);
-        if (outFile.is_open()) {
-            for (const auto& car : cars) {
-                outFile << car.id << " " << car.model << " " << car.condition << " " << car.ownerID << " " << car.due_date.getYear() << " " << car.due_date.getMonth() << " " << car.due_date.getDay() << endl;
-                // cout << car.id << " " << car.model << " " << car.condition << endl;
-            }
-            outFile.close();
-            cout << "Records saved to " << filename << endl;
-        } else {
-            cerr << "Unable to open file " << filename << endl;
-        }
-    }
 
-    static void loadFromFile(vector<Car>& cars, const string& filename) {
-        ifstream inFile(filename);
-        if (inFile.is_open()) {
-            cars.clear(); // Clear existing data
-            int id, model, condition, ownerID;
-            int y,m,d;
-
-            while (inFile >> id >> model >> condition >> ownerID >> y >> m >> d) {
-                cars.push_back(Car(id,model,condition,DateTime(y,m,d),ownerID));
-            }
-            inFile.close();
-            cout << "Records loaded from " << filename << endl;
-        } else {
-            cerr << "Unable to open file " << filename << endl;
+        int rent_request(int id,int y,int m,int d) {
+            ownerID = id;
+            due_date = DateTime(y,m,d);
+            return 0;
         }
-    }
+
+
+        DateTime show_due_date() { return due_date; }
+
+        // Function to add a new car to the database
+        static void addCar(vector<Car>& cars) {
+            int id,condition;
+            string model;
+            cout << "Enter the model of the Car to be Added : " ;
+            cin >> model;
+
+            if(!cars.empty())
+                cars.push_back(Car(model, id = cars.back().id+1));
+            else 
+                cars.push_back(Car(model, id = CAR_BEGIN_ID));
+
+            cout << "The ID of the added car is " << id << endl;
+        }
+
+        // Function to update an existing car in the database
+        static void updateCar(vector<Car>& cars) {
+
+            int carId;
+            cout << "Enter the ID of the car to be modified : " ;
+            cin >> carId;
+
+            int k;
+
+            auto it = lower_bound(cars.begin(), cars.end(), carId, [](const Car& car, int id) {
+                return car.id < id;
+            });
+            if (it != cars.end()) {
+                
+                cout << "Choose the entry to modify\n1 - Condition\n2 - Due-Date" << endl;
+                cin >> k;
+                string temp;
+                int d,m,y;
+                regex pattern("\\b\\d{2}-\\d{2}-\\d{4}\\b");
+                switch(k){
+                    case 1:
+                        cout << "Choose an option\n1 - Heavy Damaged\n2 - Light Damage\n3 - Minor Scratches\n4 - Fine" << endl;
+                        cin >> k;
+                        it->condition = k;                
+                        break;
+                    case 2:
+                        cout << "Enter the due-date of the Car (in DD-MM-YYYY) format : " ;
+                        cin >> temp;
+                    if (!parse_date(temp,&d,&m,&y))
+                    {
+                        cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
+                        updateCar(cars);
+                    }
+                    it->due_date = DateTime(y,m,d);
+
+                        break;
+                    default:
+                        cout << "Please enter a valid number!" << endl;
+                        updateCar(cars);
+                        break;
+                }
+                // *it = updatedCar;
+
+            } else {
+                cout << "Car with ID " << carId << " not found." << endl;
+            }
+        }
+
+        // Function to delete a car from the database
+        static void deleteCar(vector<Car>& cars) {
+
+            int carId;
+            cout << "Enter the ID of the car to be deleted : " ;
+            cin >> carId;
+
+            auto it = lower_bound(cars.begin(), cars.end(), carId, [](const Car& car, int id) {
+                return car.id < id;
+            });
+
+            if (it != cars.end()) {
+                cars.erase(it);
+            } else {
+                cout << "Car with ID " << carId << " not found." << endl;
+            }
+        }
+
+        // Function to search for a car by ID
+        static Car* searchCarById(vector<Car>& cars, int carId) {
+            auto it = lower_bound(cars.begin(), cars.end(), carId, [](const Car& car, int id) {
+                return car.id < id;
+            });
+
+            if (it != cars.end() && it->id == carId) {
+                return &(*it); 
+            } else {
+                return nullptr; 
+            }
+        }
+
+        static void showcars(vector<Car>& cars,vector<int>& carIDs, int userID = 0)
+        {
+            if(userID == 0)
+                for(int carID : carIDs){
+                    auto item = Car :: searchCarById(cars,carID);
+                    item->show();
+                }
+            else
+                for(auto& it : cars)
+                {
+                    if(it.ownerID == userID || it.ownerID == 0)
+                        it.show();
+                }
+        }
+        static void showcars(vector<Car>& cars)
+        {
+            for(auto& it  : cars){
+                it.show();
+            }
+        }
+        static void saveToFile(const vector<Car>& cars, const string& filename) {
+            ofstream outFile(filename);
+            if (outFile.is_open()) {
+                for (const auto& car : cars) {
+                    outFile << car.id << " " << car.model << " " << car.condition << " " << car.ownerID << " " << car.due_date.getYear() << " " << car.due_date.getMonth() << " " << car.due_date.getDay() << endl;
+                    // cout << car.id << " " << car.model << " " << car.condition << endl;
+                }
+                outFile.close();
+                cout << "Records saved to " << filename << endl;
+            } else {
+                cerr << "Unable to open file " << filename << endl;
+            }
+        }
+
+        static void loadFromFile(vector<Car>& cars, const string& filename) {
+            ifstream inFile(filename);
+            if (inFile.is_open()) {
+                cars.clear(); // Clear existing data
+                int id, condition, ownerID;
+                string model;
+                int y,m,d;
+
+                while (inFile >> id >> model >> condition >> ownerID >> y >> m >> d) {
+                    cars.push_back(Car(model,id,condition,DateTime(y,m,d),ownerID));
+                }
+                inFile.close();
+                cout << "Records loaded from " << filename << endl;
+            } else {
+                cerr << "Unable to open file " << filename << endl;
+            }
+        }
 };
 
 class User
@@ -201,14 +260,6 @@ class User
         }
 
         virtual void show() = 0; 
-
-        bool verify_password(string pass)
-        {
-            if(pass == password)
-                return 1;
-            else 
-                return 0;
-        }
 };
 
 class Customer : public User 
@@ -317,7 +368,7 @@ class Customer : public User
             cout << "Enter the id of the Customer to be modified : " ;
             cin >> id;
 
-            auto it = std::lower_bound(Customers.begin(), Customers.end(), id, [](const Customer& Customer, int id) {
+            auto it = lower_bound(Customers.begin(), Customers.end(), id, [](const Customer& Customer, int id) {
                 return Customer.id < id;
             });
             if (it != Customers.end()) {
@@ -334,9 +385,10 @@ class Customer : public User
             int id;
             cout << "Enter the id of the Customer to be deleted : " ;
             cin >> id;
-            auto it = std::lower_bound(Customers.begin(), Customers.end(), id, [](const Customer& Customer, int id) {
+            auto it = lower_bound(Customers.begin(), Customers.end(), id, [](const Customer& Customer, int id) {
                 return Customer.id < id;
             });
+            // auto it = searchCustomerById(customers,id);
             if (it != Customers.end()) {
                 Customers.erase(it);
             } else {
@@ -346,7 +398,7 @@ class Customer : public User
 
         // Function to search for a Customer by ID
         static Customer* searchCustomerById(vector<Customer>& Customers, int CustomerId) {
-            auto it = std::lower_bound(Customers.begin(), Customers.end(), CustomerId, [](const Customer& Customer, int id) {
+            auto it = lower_bound(Customers.begin(), Customers.end(), CustomerId, [](const Customer& Customer, int id) {
                 return Customer.id < id;
             });
 
@@ -362,6 +414,31 @@ class Customer : public User
                 it.show();
         }
 
+        void rent_request(vector<Car>& cars)
+        {
+            int carID;
+            string date;
+            int d,m,y;
+
+            cout << "Enter the id of the car to be rented : " ;
+            cin >> carID;
+            cout << "Enter the date of rental in DD-MM-YYYY format : ";
+            cin >> date;
+            if (!parse_date(date,&d,&m,&y))
+            {
+                cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
+                return;
+            }
+
+            auto carIt = Car :: searchCarById(cars,carID);
+
+            if(carIt->ownerID == 0){
+                rented_cars.push_back(carID);
+                carIt->rent_request(id,y,m,d);
+            }
+            else
+                cout << "This car is not available for rental" << endl;
+        }
         void begin_session(vector<Car>& cars)
         {
             cout << "Welcome " << name << endl;
@@ -379,28 +456,13 @@ class Customer : public User
             Car* carIt;
             int d,m,y;
             int carID;
-            regex pattern("\\b\\d{2}-\\d{2}-\\d{4}\\b");
             switch(k)
             {
                 case 1 :
                     Car :: showcars(cars, rented_cars, id);
                     break;
                 case 2 :
-                    cout << "Enter the id of the car to be rented : " ;
-                    cin >> carID;
-                    cout << "Enter the date of rental in DD-MM-YYYY format : ";
-                    cin >> date;
-                    parse_date(date,&d,&m,&y);
-
-                    carIt = Car :: searchCarById(cars,carID);
-
-                    if(carIt->ownerID == 0){
-                        carIt->ownerID = id;
-                        carIt->due_date = DateTime(y,m,d);
-                        rented_cars.push_back(carID);
-                    }
-                    else
-                        cout << "This car is not available for rental" << endl;
+                    rent_request(cars);
                     break;
 
                 case 3 :
@@ -411,22 +473,19 @@ class Customer : public User
 
 
                     // Check if the input matches the pattern
-                    if (regex_match(date, pattern)) {}
-                    else {
+                    if (!parse_date(date,&d,&m,&y))
+                    {
                         cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
+                        begin_session(cars);
                     }
 
                     carIt = Car :: searchCarById(cars,carID);
                     carIt->ownerID = 0;
                     rented_cars.erase(remove(rented_cars.begin(), rented_cars.end(), carID), rented_cars.end());
 
-                    parse_date(date,&d,&m,&y);
-
                     diff = DateTime(y,m,d) - carIt->due_date;
                     fine_due += diff*PENALTY_CUSTOMER;
-
                     break;
-                
                 case 4 :
                     return;
                     break;
@@ -436,6 +495,7 @@ class Customer : public User
             }
             begin_session(cars);
         }
+
         static void saveToFile(const vector<Customer>& customers, const string& filename) {
             ofstream outFile(filename);
             if (outFile.is_open()) {
@@ -559,7 +619,7 @@ class Employee : public User
 
         // Function to search for a Employee by ID
         static Employee* searchEmployeeById(vector<Employee>& Employees, int EmployeeId) {
-            auto it = std::lower_bound(Employees.begin(), Employees.end(), EmployeeId, [](const Employee& Employee, int id) {
+            auto it = lower_bound(Employees.begin(), Employees.end(), EmployeeId, [](const Employee& Employee, int id) {
                 return Employee.id < id;
             });
 
@@ -580,7 +640,7 @@ class Employee : public User
             cin >> password;
 
             // Search for the Employee with the given name
-            auto it = std :: lower_bound(Employees.begin(), Employees.end(), id,[](const Employee& Employee, int id) {
+            auto it = lower_bound(Employees.begin(), Employees.end(), id,[](const Employee& Employee, int id) {
                 return Employee.id < id;
             });
 
@@ -607,7 +667,7 @@ class Employee : public User
             cout << "Enter the id of the Customer to be modified : " ;
             cin >> id;
 
-            auto it = std::lower_bound(Employees.begin(), Employees.end(), id, [](const Employee& Employee, int id) {
+            auto it = lower_bound(Employees.begin(), Employees.end(), id, [](const Employee& Employee, int id) {
                 return Employee.id < id;
             });
 
@@ -626,7 +686,7 @@ class Employee : public User
             cout << "Enter the id of the Customer to be deleted : " ;
             cin >> id;
 
-            auto it = std::lower_bound(Employees.begin(), Employees.end(), id, [](const Employee& Employee, int id) {
+            auto it = lower_bound(Employees.begin(), Employees.end(), id, [](const Employee& Employee, int id) {
                 return Employee.id < id;
             });
             if (it != Employees.end()) {
@@ -636,11 +696,36 @@ class Employee : public User
             }
         }
 
-
         static void show_employees(vector<Employee>& Employees)
         {
             for(auto& it : Employees)
                 it.show();
+        }
+    
+        void rent_request(vector<Car>& cars)
+        {
+            int carID;
+            string date;
+            int d,m,y;
+
+            cout << "Enter the id of the car to be rented : " ;
+            cin >> carID;
+            cout << "Enter the date of rental in DD-MM-YYYY format : ";
+            cin >> date;
+            if (!parse_date(date,&d,&m,&y))
+            {
+                cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
+                return;
+            }
+
+            auto carIt = Car :: searchCarById(cars,carID);
+
+            if(carIt->ownerID == 0){
+                rented_cars.push_back(carID);
+                carIt->rent_request(id,y,m,d);
+            }
+            else
+                cout << "This car is not available for rental" << endl;
         }
 
         void begin_session(vector<Car>& cars)
@@ -648,7 +733,7 @@ class Employee : public User
             cout << "Welcome " << name << endl;
             cout << "-----------------" << endl;
             int k;
-            cout << "Choose an option\n1 - Show Available Cars\n2 - Rent a Car\n3 - Return a Car" << endl;
+            cout << "Choose an option\n1 - Show Available Cars\n2 - Rent a Car\n3 - Return a Car\n4 - Exit" << endl;
             cin >> k;
 
             char delimiter;
@@ -667,55 +752,36 @@ class Employee : public User
                     Car :: showcars(cars, rented_cars, id);
                     break;
                 case 2 :
-                    cout << "Enter the id of the car to be rented : " ;
-                    cin >> carID;
-                    cout << "Enter the date of rental in DD-MM-YYYY format : ";
-                    cin >> date;
-                    parse_date(date,&d,&m,&y);
-
-                    carIt = Car :: searchCarById(cars,carID);
-
-                    if(carIt->ownerID == 0){
-                        carIt->ownerID = id;
-                        carIt->due_date = DateTime(y,m,d);
-                        rented_cars.push_back(carID);
-                    }
-                    else
-                        cout << "This car is not available for rental" << endl;
-
-                    begin_session(cars);
+                    rent_request(cars);
                     break;
-
                 case 3 :
                     cout << "Enter the id of the car to be returned" << endl;
                     cin >> carID;
                     cout << "Enter the date of return in DD-MM-YYYY format : ";
                     cin >> date;
 
-
-                    // Check if the input matches the pattern
-                    if (regex_match(date, pattern)) {}
-                    else {
-                        cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
-                        begin_session(cars);
-                    }
-
                     carIt = Car :: searchCarById(cars,carID);
                     carIt->ownerID = 0;
                     rented_cars.erase(remove(rented_cars.begin(), rented_cars.end(), carID), rented_cars.end());
 
-                    parse_date(date,&d,&m,&y);
+                    if (!parse_date(date,&d,&m,&y))
+                    {
+                        cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
+                        begin_session(cars);
+                    }
 
                     diff = DateTime(y,m,d) - carIt->due_date;
                     fine_due += diff*PENALTY_CUSTOMER;
 
                     break;
-
+                case 4:
+                    return;
                 default :
                     cout << "Enter a valid option" << endl;
                     begin_session(cars);
                     break;
             }
+            begin_session(cars);
         }
         static void saveToFile(const vector<Employee>& employees, const string& filename) {
             ofstream outFile(filename);
@@ -812,7 +878,7 @@ class Manager : public User
 
         // Function to search for a Manager by ID
         static Manager* searchManagerById(vector<Manager>& Managers, int ManagerId) {
-            auto it = std::lower_bound(Managers.begin(), Managers.end(), ManagerId, [](const Manager& Manager, int id) {
+            auto it = lower_bound(Managers.begin(), Managers.end(), ManagerId, [](const Manager& Manager, int id) {
                 return Manager.id < id;
             });
 
@@ -833,7 +899,7 @@ class Manager : public User
             cin >> password;
 
             // Search for the Manager with the given name
-            auto it = std :: lower_bound(Managers.begin(), Managers.end(), id,[](const Manager& Manager, int id) {
+            auto it = lower_bound(Managers.begin(), Managers.end(), id,[](const Manager& Manager, int id) {
                 return Manager.id < id;
             });
 
@@ -860,7 +926,7 @@ class Manager : public User
             cout << "Enter the id of the Customer to be modified : " ;
             cin >> id;
 
-            auto it = std::lower_bound(Managers.begin(), Managers.end(), id, [](const Manager& Manager, int id) {
+            auto it = lower_bound(Managers.begin(), Managers.end(), id, [](const Manager& Manager, int id) {
                 return Manager.id < id;
             });
 
@@ -879,7 +945,7 @@ class Manager : public User
             cout << "Enter the id of the Customer to be deleted : " ;
             cin >> id;
 
-            auto it = std::lower_bound(Managers.begin(), Managers.end(), id, [](const Manager& Manager, int id) {
+            auto it = lower_bound(Managers.begin(), Managers.end(), id, [](const Manager& Manager, int id) {
                 return Manager.id < id;
             });
             if (it != Managers.end()) {
@@ -1107,10 +1173,9 @@ int main()
     return 0;
 }
 
-// keep the classes and header functions separately
 // add functionality of setting up the due date after car is rented
 // add renting cost
-// add car database functions
-// add how record is modified
 // how record will decide if car can be rented or not
 // add how condition of car is assessed after return
+// clearing dues
+// keep the classes and header functions separately
