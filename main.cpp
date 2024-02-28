@@ -1119,8 +1119,11 @@ int main()
     return 0;
 }
 
+// load and save functions also in the class defintion 
+// keep the classes and header fucntions separately
 // add functionality of setting up the due date after car is rented
 // add renting cost
 // add car database functions
 // add how record is modified
+// how record will decide if car can be rented or not
 // add how condition of car is assessed after return
