@@ -73,7 +73,7 @@ class Employee : public User
 class Manager : public User 
 {
     public : 
-        void set_password( string pass) {password = pass;} 
+        void set_password( string pass);
         Manager(const string& name, int id, const string& password);
         void show_records(vector<Customer>& customers, vector<Employee>& employees, vector<Car>& cars);
         static void addManager(vector<Manager>& Managers);

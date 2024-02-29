@@ -54,22 +54,22 @@ int main()
         case 1 :
             cout << "Enter the type of user :\n1 - Customer\n2 - Employee\n3 - Manager" << endl;
             cin >> j;
-            Customer* it1;
-            Employee* it2;
-            Manager* it3;
+            Customer* it1 = nullptr;
+            Employee* it2 = nullptr;
+            Manager* it3 = nullptr;
             switch(j)
             {
                 case 1: 
-                    it1 = Customer :: login(customers);
-                    it1->begin_session(cars);
+					while(it1 != nullptr)
+                    	it1->begin_session(cars);
                     break;
                 case 2:
-                    it2 = Employee :: login(employees);
-                    it2->begin_session(cars);
+					while(it2 != nullptr)
+                    	it2->begin_session(cars);
                     break;
                 case 3:
-                    it3 = Manager :: login(managers);
-                    it3->begin_session(customers,cars,employees);
+					while(it3 != nullptr)
+                    	it3->begin_session(customers,cars,employees);
                     break;
             }
 			break;

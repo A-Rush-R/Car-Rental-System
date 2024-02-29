@@ -123,8 +123,6 @@ Customer* Customer::login(std::vector<Customer>& customers)  {
     string name, password;
     cout << "Enter Username: ";
     cin >> name;
-    cout << "Enter Password: ";
-    cin >> password;
 
     // Search for the customer with the given name
     auto it = find_if(customers.begin(), customers.end(), [&name](const Customer& customer) {
@@ -132,7 +130,13 @@ Customer* Customer::login(std::vector<Customer>& customers)  {
     });
 
     // If customer found, check password
-    if (it != customers.end()) {
+    if (it == customers.end()) {
+        cout << "Customer not found!" << endl;
+        return nullptr;
+    } else 
+    {
+        cout << "Enter Password: ";
+        cin >> password;
         if (it->password == password) {
             cout << "-----------------" << endl;
             cout << "Login Successful!" << endl;
@@ -141,9 +145,6 @@ Customer* Customer::login(std::vector<Customer>& customers)  {
             cout << "Incorrect Password!" << endl;
             return nullptr;
         }
-    } else {
-        cout << "Customer not found!" << endl;
-        return nullptr;
     }
 }
 
@@ -415,8 +416,6 @@ Employee* Employee :: login(vector<Employee>& employees) {
     string name, password;
     cout << "Enter Username: ";
     cin >> name;
-    cout << "Enter Password: ";
-    cin >> password;
 
     // Search for the customer with the given name
     auto it = find_if(employees.begin(), employees.end(), [&name](const Employee& employee) {
@@ -424,7 +423,14 @@ Employee* Employee :: login(vector<Employee>& employees) {
     });
 
     // If customer found, check password
-    if (it != employees.end()) {
+    if (it == employees.end()) {
+        cout << "Employee not found!" << endl;
+        return nullptr;
+    } 
+    else 
+    {
+        cout << "Enter Password: ";
+        cin >> password;
         if (it->password == password) {
             cout << "-----------------" << endl;
             cout << "Login Successful!" << endl;
@@ -433,9 +439,6 @@ Employee* Employee :: login(vector<Employee>& employees) {
             cout << "Incorrect Password!" << endl;
             return nullptr;
         }
-    } else {
-        cout << "Employee not found!" << endl;
-        return nullptr;
     }
 }
 
@@ -717,8 +720,6 @@ Manager* Manager :: login(vector<Manager>& Managers) {
     string name, password;
     cout << "Enter Username: ";
     cin >> name;
-    cout << "Enter Password: ";
-    cin >> password;
 
     // Search for the Manager with the given name
     auto it = find_if(Managers.begin(), Managers.end(), [&name](const Manager& manager) {
@@ -727,6 +728,12 @@ Manager* Manager :: login(vector<Manager>& Managers) {
 
     // If Manager found, check password
     if (it != Managers.end()) {
+        cout << "Manager not found!" << endl;
+        return nullptr;
+    } else 
+    {
+        cout << "Enter Password: ";
+        cin >> password;
         if (it->password == password) {
             cout << "-----------------" << endl;
             cout << "Login Successful!" << endl;
@@ -735,9 +742,6 @@ Manager* Manager :: login(vector<Manager>& Managers) {
             cout << "Incorrect Password!" << endl;
             return nullptr;
         }
-    } else {
-        cout << "Manager not found!" << endl;
-        return nullptr;
     }
 }
 
