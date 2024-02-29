@@ -43,6 +43,9 @@ int main()
     cin >> k;
 
     int j;
+	Customer* it1 = nullptr;
+	Employee* it2 = nullptr;
+	Manager* it3 = nullptr;
     switch(k)
     {
         //registering a new customer
@@ -54,22 +57,23 @@ int main()
         case 1 :
             cout << "Enter the type of user :\n1 - Customer\n2 - Employee\n3 - Manager" << endl;
             cin >> j;
-            Customer* it1 = nullptr;
-            Employee* it2 = nullptr;
-            Manager* it3 = nullptr;
             switch(j)
             {
                 case 1: 
 					while(it1 != nullptr)
-                    	it1->begin_session(cars);
+                    	it1 = Customer :: login(customers);	
+                    it1->begin_session(cars);
+
                     break;
                 case 2:
 					while(it2 != nullptr)
-                    	it2->begin_session(cars);
+                    	it2 = Employee :: login(employees);
+                    it2->begin_session(cars);
                     break;
                 case 3:
 					while(it3 != nullptr)
-                    	it3->begin_session(customers,cars,employees);
+                    	it3 = Manager :: login(managers);
+                    it3->begin_session(customers,cars,employees);
                     break;
             }
 			break;
