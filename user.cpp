@@ -205,7 +205,7 @@ void Customer :: show_customers(vector<Customer>& customers)
         it.show();
 }
 
-void Customer::begin_session(std::vector<Car>& cars) 
+void Customer :: begin_session(std::vector<Car>& cars) 
 {
     cout << "Welcome " << name << endl;
     cout << "-----------------" << endl;
@@ -727,7 +727,7 @@ Manager* Manager :: login(vector<Manager>& Managers) {
     });
 
     // If Manager found, check password
-    if (it != Managers.end()) {
+    if (it == Managers.end()) {
         cout << "Manager not found!" << endl;
         return nullptr;
     } else 
@@ -920,7 +920,6 @@ void Manager :: loadFromFile(vector<Manager>& managers, const string& filename) 
         string name,password;
 
         while (inFile >> id >> name >> password) {
-
             managers.push_back(Manager(name,id,password));
         }
         inFile.close();

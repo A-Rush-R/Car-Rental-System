@@ -6,7 +6,7 @@
 #include "user.h"
 using namespace std;
 
-void load(vector<Car>& cars, vector<Customer>& customers, vector<Employee>& employees, vector<Manager> managers)
+void load(vector<Car>& cars, vector<Customer>& customers, vector<Employee>& employees, vector<Manager>& managers)
 {
     Car :: loadFromFile(cars,"cars.txt");
     Customer :: loadFromFile(customers,"customers.txt");
@@ -14,7 +14,7 @@ void load(vector<Car>& cars, vector<Customer>& customers, vector<Employee>& empl
     Manager :: loadFromFile(managers,"managers.txt");
 }
 
-void save(vector<Car>& cars, vector<Customer>& customers, vector<Employee>& employees, vector<Manager> managers)
+void save(vector<Car>& cars, vector<Customer>& customers, vector<Employee>& employees, vector<Manager>& managers)
 {
     Car :: saveToFile(cars,"cars.txt");
     Customer :: saveToFile(customers,"customers.txt");
@@ -32,6 +32,8 @@ int main()
 
     load(cars,customers,employees,managers);
 
+	Car :: showcars(cars,0);
+
     int k;
     cout << "Welcome to Car Rental System" << endl ;
     cout << "----------------------------" << endl ;
@@ -43,9 +45,12 @@ int main()
     cin >> k;
 
     int j;
-	Customer* it1 = nullptr;
-	Employee* it2 = nullptr;
-	Manager* it3 = nullptr;
+	Customer* it1 ;
+	Employee* it2 ;
+	Manager* it3 ;
+	it1 = nullptr;
+	it2 = nullptr;
+	it3 = nullptr;
     switch(k)
     {
         //registering a new customer
@@ -60,18 +65,18 @@ int main()
             switch(j)
             {
                 case 1: 
-					while(it1 != nullptr)
+					while(it1 == nullptr)
                     	it1 = Customer :: login(customers);	
                     it1->begin_session(cars);
 
                     break;
                 case 2:
-					while(it2 != nullptr)
+					while(it2 == nullptr)
                     	it2 = Employee :: login(employees);
                     it2->begin_session(cars);
                     break;
                 case 3:
-					while(it3 != nullptr)
+					while(it3 == nullptr)
                     	it3 = Manager :: login(managers);
                     it3->begin_session(customers,cars,employees);
                     break;
@@ -84,7 +89,3 @@ int main()
 
     return 0;
 }
-
-// update record
-// how record will decide if car can be rented or not
-// keep the classes and header functions separately

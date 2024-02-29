@@ -19,7 +19,7 @@ using namespace std;
 Car::Car(std::string model, int id, int condition, int rent, DateTime due_date, DateTime rent_date, int ownerID)
     : id(id), model(model), condition(condition), rent(rent), due_date(due_date), rent_date(rent_date), ownerID(ownerID) {}
 
-void Car::show() const {
+void Car :: show() const {
     string status = ownerID == 0 ? "Available" : "Rented";
     cout << "ID   Model    Condition    Status    OwnerID  Rent(per day)" << std::endl;
     string condition_name;
@@ -163,11 +163,13 @@ Car* Car::searchCarById(std::vector<Car>& cars, int carId) {
     }
 }
 
-void Car::showcars(std::vector<Car>& cars, int userID) {
-    if(userID / MANAGER_BEGIN_ID == 1) //for manager
+void Car :: showcars(std::vector<Car>& cars, int userID) {
+    if(userID / MANAGER_BEGIN_ID == 1){//for manager
+        cout << cars.size() << endl;
         for(auto& it : cars){
             it.show();
         }
+    }
     else
         for(auto& it : cars)
         {
@@ -190,7 +192,7 @@ void Car :: saveToFile(const vector<Car>& cars, const string& filename) {
     }
 }
 
-void Car::loadFromFile(std::vector<Car>& cars, const std::string& filename){
+void Car :: loadFromFile(std::vector<Car>& cars, const std::string& filename){
     ifstream inFile(filename);
     if (inFile.is_open()) { 
         cars.clear(); // Clear existing data
