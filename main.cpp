@@ -32,7 +32,6 @@ int main()
 
     load(cars,customers,employees,managers);
 
-	Car :: showcars(cars,0);
 
     int k;
     cout << "Welcome to Car Rental System" << endl ;
