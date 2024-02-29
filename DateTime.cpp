@@ -1,6 +1,7 @@
 #include "DateTime.h"
 #include <iostream>
 #include <iomanip>
+using namespace std;
 
 DateTime::DateTime(int yr, int mon, int d)
     : year(yr), month(mon), day(d) {}
@@ -26,7 +27,7 @@ int DateTime::getDay() const {
 void DateTime::display() const {
     std::cout << std::setfill('0') << std::setw(4) << year << '-'
               << std::setw(2) << month << '-'
-              << std::setw(2) << day << std::endl;
+              << std::setw(2) << day ;
 }
 
 // Helper function to check if a year is a leap year
@@ -44,6 +45,7 @@ int DateTime :: daysInMonth(int year, int month) {
         case 2:
             return isLeapYear(year) ? 29 : 28;
         default:
+            cerr << "Invalid Month" << endl;
             return 0; // Invalid month
     }
 }
