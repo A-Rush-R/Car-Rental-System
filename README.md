@@ -13,3 +13,7 @@ g++ -c user.cpp -o user.o
 g++ user.o DateTime.o main.o Car.o utils.o -o my_program
 ./my_program.exe
 ```
+
+## Details
+
+- Repairing a car rewards the employee by increasing their record

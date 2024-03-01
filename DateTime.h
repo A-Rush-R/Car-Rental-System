@@ -1,5 +1,6 @@
 #ifndef DATETIME_H
 #define DATETIME_H
+#include<string>
 
 class DateTime {
 private:
@@ -13,7 +14,7 @@ public:
     int getYear() const;
     int getMonth() const;
     int getDay() const;
-    void display() const;
+    std :: string display() const;
     static int daysInMonth(int year, int month);
     static bool isLeapYear(int year);
 };

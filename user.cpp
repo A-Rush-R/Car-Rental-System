@@ -271,7 +271,7 @@ void Customer :: begin_session(std::vector<Car>& cars)
             break;
         case 4 :
             cout << "Current dues : " << show_due() << endl;
-            if(!show_due)
+            if(!show_due())
                 cout << "No dues" << endl;
             else{
                 cout << "Do you want to pay dues ?\n1 - Yes\n2 - No" << endl;
@@ -528,6 +528,16 @@ void Employee :: rent_request(vector<Car>& cars)
     }    
 }
 
+void Employee :: update_record(int late_duration,int condition)
+{
+    record += 200 - 50 * ( 4 - condition) - late_duration;
+}
+
+int Employee :: show_due()
+{
+    return fine_due;
+}
+
 void Employee :: begin_session(vector<Car>& cars)
 {
     cout << "Welcome " << name << endl;
@@ -592,7 +602,7 @@ void Employee :: begin_session(vector<Car>& cars)
             break;
         case 4 :
             cout << "Current dues : " << show_due() << endl;
-            if(!show_due)
+            if(!show_due())
                 cout << "No dues" << endl;
             else{
                 cout << "Do you want to pay dues ?\n1 - Yes\n2 - No" << endl;

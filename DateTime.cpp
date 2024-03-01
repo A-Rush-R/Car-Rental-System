@@ -1,6 +1,7 @@
 #include "DateTime.h"
 #include <iostream>
 #include <iomanip>
+#include <sstream>
 using namespace std;
 
 DateTime::DateTime(int yr, int mon, int d)
@@ -24,10 +25,12 @@ int DateTime::getDay() const {
     return day;
 }
 
-void DateTime::display() const {
-    std::cout << std::setfill('0') << std::setw(4) << year << '-'
-              << std::setw(2) << month << '-'
-              << std::setw(2) << day ;
+string DateTime::display() const {
+    std::ostringstream oss;
+    oss << std::setfill('0') << std::setw(4) << year << '-'
+        << std::setw(2) << month << '-'
+        << std::setw(2) << day;
+    return oss.str();
 }
 
 // Helper function to check if a year is a leap year

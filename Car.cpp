@@ -8,6 +8,7 @@
 #include "DateTime.h"
 #include "utils.h"
 #include<cassert>
+#include<iomanip>
 #define CAR_BEGIN_ID 100001
 #define MANAGER_BEGIN_ID 400001
 #define HEAVY_DAMAGE 1
@@ -26,7 +27,7 @@ void Car :: repair()
 
 void Car :: show() const {
     string status = ownerID == 0 ? "Available" : "Rented";
-    cout << "ID   Model    Condition    Status    OwnerID  Rent(per day)" << std::endl;
+    // cout << "ID   Model    Condition    Status    OwnerID  Rent(per day)" << std::endl;
     string condition_name;
 
     assert(condition <= FINE && condition >= HEAVY_DAMAGE);
@@ -45,10 +46,11 @@ void Car :: show() const {
             condition_name = "Fine";
             break;
     }
-    std::cout << id << " " << model << " " << condition_name << " " << status << " " << ownerID << " " << rent << " ";
-    rent_date.display();
-    due_date.display();
-    std::cout << std::endl;
+    cout << left << setw(7) << id << setw(15) << model << setw(20) << condition_name << setw(15) << status << setw(10) << rent ;
+    // cout << id << " " << model << " " << condition_name << " " << status << " "  << rent << " ";
+    if(ownerID != 0)  
+        cout << setw(7) << ownerID  << setw(10) << rent_date.display() << setw(10) <<  due_date.display();
+    cout << endl;
 }
 
 int Car::rent_request(int id, int y, int m, int d, int y_, int m_, int d_) {
@@ -168,19 +170,33 @@ Car* Car::searchCarById(std::vector<Car>& cars, int carId) {
     }
 }
 
-void Car :: showcars(std::vector<Car>& cars, int userID) {
+void Car :: showcars(vector<Car>& cars, int userID) {
+    int count = 0;
     if(userID / MANAGER_BEGIN_ID == 1){//for manager
-        cout << cars.size() << endl;
-        for(auto& it : cars){
-            it.show();
+        if(!cars.size())
+            cout << "No cars available" << endl;
+        else {
+            cout << left << setw(7) << "ID" << setw(15) << "Model" << setw(20) << "Condition" << setw(15) << "Status" << setw(10) << "Rent" << setw(8) << "OwnerID" << setw(10) << "Rent Date" << setw(20) << "Due Date" << endl;
+
+            for(auto& it : cars){
+                it.show();
+            }
         }
     }
     else
-        for(auto& it : cars)
+    {   for(auto& it : cars)
         {
-            if(it.ownerID == userID || it.ownerID == 0)
+            if(it.ownerID == userID || it.ownerID == 0){
+                if (count == 0)
+                    cout << left << setw(7) << "ID" << setw(15) << "Model" << setw(20) << "Condition" << setw(15) << "Status" << setw(10) << "Rent" << setw(8) << "OwnerID" << setw(10) << "Rent-Date" << setw(20) << "Due Date" << endl;
+
                 it.show();
+                count ++;
+            }
         }
+        if (count == 0)
+            cout << "No cars available" << endl;
+    }
 }
 
 void Car :: saveToFile(const vector<Car>& cars, const string& filename) {
