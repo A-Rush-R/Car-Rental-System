@@ -333,6 +333,7 @@ void Customer::saveToFile(const std::vector<Customer>& customers, const std::str
 void Customer::loadFromFile(std::vector<Customer>& customers, const std::string& filename) 
 {
     ifstream inFile(filename);
+    int sum_record = 0;
     if (inFile.is_open()) {
         customers.clear(); // Clear existing data
         int id, fine_due, record, numCars,carID;
@@ -346,10 +347,12 @@ void Customer::loadFromFile(std::vector<Customer>& customers, const std::string&
                 cin >> carID;
                 rented_cars.push_back(carID);
             }
-
+            sum_record += record;
             customers.push_back(Customer(name,id,password,fine_due,record,rented_cars));
         }
         inFile.close();
+        if(!customers.size())
+            AVG_CUSTOMER_RECORD = sum_record / customers.size();
         cout << "Records loaded from " << filename << endl;
     } else {
         cerr << "Unable to open file " << filename << endl;
@@ -688,6 +691,7 @@ void Employee :: saveToFile(const vector<Employee>& employees, const string& fil
 }
 
 void Employee :: loadFromFile(vector<Employee>& employees, const string& filename) {
+    int sum_record = 0;
     ifstream inFile(filename);
     if (inFile.is_open()) {
         employees.clear(); // Clear existing data
@@ -702,10 +706,12 @@ void Employee :: loadFromFile(vector<Employee>& employees, const string& filenam
                 cin >> carID;
                 rented_cars.push_back(carID);
             }
-
+            sum_record += record;
             employees.push_back(Employee(name,id,password,fine_due,record,rented_cars));
         }
         inFile.close();
+        if(!employees.size())
+            AVG_EMPLOYEE_RECORD = sum_record / employees.size();
         cout << "Records loaded from " << filename << endl;
     } else {
         cerr << "Unable to open file " << filename << endl;
