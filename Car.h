@@ -20,7 +20,7 @@ public:
 
     Car(std::string model = "", int id = 0, int condition = 0, int rent = 0, DateTime due_date = DateTime(), DateTime rent_date = DateTime(), int ownerID = 0);
 
-    void show() const;
+    void show(int discount) const;
     int rent_request(int id, int y, int m, int d, int y_, int m_, int d_);
     DateTime show_due_date();
     void repair();

@@ -9,6 +9,11 @@ using namespace std;
 #define MANAGER_BEGIN_ID 400001
 #define REPAIR_REWARD 50
 #define NAME_CAP 20
+#define DISCOUNT 0.15
+#define HEAVY_DAMAGE 1
+#define LIGHT_DAMAGE 2
+#define MINOR_SCRATCHES 3
+#define FINE 4 
 
 
 int AVG_CUSTOMER_RECORD = 100;
@@ -81,8 +86,12 @@ void Customer::rent_request(std::vector<Car>& cars)
             cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
             rent_request(cars);
         }
+        while((DateTime(y_,m_,d_) - DateTime(y_,m_,d_) <= 0))
+        {
+            
+        }
         rented_cars.push_back(carID);
-        carIt->rent_request(id,y,m,d,y_,m_,d_);
+        carIt->rent_request(id,y_,m_,d_,y,m,d);
     }    
 }
 
@@ -138,9 +147,9 @@ void Customer :: return_request(vector<Car>& cars)
     late_duration = DateTime(y,m,d) - carIt->due_date;
     late_duration = late_duration > 0 ? late_duration : 0;
 
-    fine = carIt->rent*late_duration*PENALTY_CUSTOMER_FRAC + carIt->rent*(4 - condition) ; //fine for late return and damage(if any)
+    fine = carIt->rent*late_duration*PENALTY_CUSTOMER_FRAC + carIt->rent*(FINE - condition) ; //fine for late return and damage(if any)
     cout << "Fine charged for late return : " << carIt->rent*late_duration*PENALTY_CUSTOMER_FRAC << endl;
-    cout << "Fine charged for damages : " << carIt->rent*(4 - condition) << endl;
+    cout << "Fine charged for damages : " << carIt->rent*(FINE - condition) << endl;
     cout << "Total fine : " << fine << endl;
 
     fine_due += fine;
@@ -226,7 +235,7 @@ Customer* Customer::login(std::vector<Customer>& customers)  {
 
 void Customer :: update_record(int late_duration,int condition)
 {
-    record += 200 - 50 * ( 4 - condition) - late_duration;
+    record += 200 - 50 * ( FINE - condition) - late_duration;
 }
 
 void Customer::updateCustomer(std::vector<Customer>& customers) 
@@ -531,14 +540,14 @@ void Employee :: return_request(vector<Car>& cars)
 
     duration = carIt->due_date - carIt->rent_date;
     payable_rent = duration*carIt->rent;
-    cout << "Amount to be paid is : " << payable_rent << endl;
+    cout << "Amount to be paid is : " << payable_rent * (1 - DISCOUNT) << endl;
 
     late_duration = DateTime(y,m,d) - carIt->due_date;
     late_duration = late_duration > 0 ? late_duration : 0;
 
-    fine = carIt->rent*late_duration*PENALTY_EMPLOYEE_FRAC + carIt->rent*(4 - condition) ; //fine for late return and damage(if any)
+    fine = carIt->rent*late_duration*PENALTY_EMPLOYEE_FRAC + carIt->rent*(FINE - condition) ; //fine for late return and damage(if any)
     cout << "Fine charged for late return : " << carIt->rent*late_duration*PENALTY_EMPLOYEE_FRAC << endl;
-    cout << "Fine charged for damages : " << carIt->rent*(4 - condition) << endl;
+    cout << "Fine charged for damages : " << carIt->rent*(FINE - condition) << endl;
     cout << "Total fine : " << fine << endl;
 
     fine_due += fine;

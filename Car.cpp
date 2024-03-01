@@ -11,10 +11,13 @@
 #include<iomanip>
 #define CAR_BEGIN_ID 100001
 #define MANAGER_BEGIN_ID 400001
+#define CUSTOMER_BEGIN_ID 200001
+#define EMPLOYEE_BEGIN_ID 300001
 #define HEAVY_DAMAGE 1
 #define LIGHT_DAMAGE 2
 #define MINOR_SCRATCHES 3
 #define FINE 4 
+#define DISCOUNT 0.15 //discount for the employees (between 0 and 1)
 using namespace std;
 
 Car::Car(std::string model, int id, int condition, int rent, DateTime rent_date, DateTime due_date, int ownerID)
@@ -25,7 +28,7 @@ void Car :: repair()
     condition = FINE;
 }
 
-void Car :: show() const {
+void Car :: show(int discount = 0) const {
     string status = ownerID == 0 ? "Available" : "Rented";
     // cout << "ID   Model    Condition    Status    OwnerID  Rent(per day)" << std::endl;
     string condition_name;
@@ -46,7 +49,7 @@ void Car :: show() const {
             condition_name = "Fine";
             break;
     }
-    cout << left << setw(8) << id << setw(15) << model << setw(20) << condition_name << setw(12) << status << setw(7) << rent ;
+    cout << left << setw(8) << id << setw(15) << model << setw(20) << condition_name << setw(12) << status << setw(7) << rent * ( 1 - discount);
     // cout << id << " " << model << " " << condition_name << " " << status << " "  << rent << " ";
     if(ownerID != 0)  
         cout << setw(8) << ownerID  << setw(11) << rent_date.display() << setw(10) <<  due_date.display();
@@ -172,16 +175,19 @@ Car* Car::searchCarById(std::vector<Car>& cars, int carId) {
 
 void Car :: showcars(vector<Car>& cars, int userID) {
     int count = 0;
+    int discount = 0;
     if(userID / MANAGER_BEGIN_ID == 1){//for manager
         if(!cars.size())
             cout << "No cars available" << endl;
         else {
+            if ( userID >= EMPLOYEE_BEGIN_ID && userID < MANAGER_BEGIN_ID)  
+                discount = DISCOUNT;
             cout << "-----------------------------------------------------------------------------------------" << endl;
             cout << left << setw(8) << "ID" << setw(15) << "Model" << setw(20) << "Condition" << setw(12) << "Status" << setw(7) << "Rent" << setw(8) << "OwnerID" << setw(11) << "Rent-Date" << setw(10) << "Due-Date" << endl;
             cout << "-----------------------------------------------------------------------------------------" << endl;
 
             for(auto& it : cars){
-                it.show();
+                it.show(discount);
             }
         }
     }
