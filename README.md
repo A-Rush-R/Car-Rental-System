@@ -17,6 +17,12 @@ This repository has the following contents &rarr;
     - `parse_date` function to read date and time inputs from user
     - Overloaded `-` operator to subtract dates
 6. [`main.cpp`](/main.cpp) file containing the driver function for the program
+7. `.txt` files for the databases &rarr;
+    - [`cars.txt`](/cars.txt)
+    - [`customers.txt`](/customers.txt)
+    - [`employees.txt`](/employees.txt)
+    - [`managers.txt`](/managers.txt)
+
 
 ## Instructions 
 Run the following command to compile and run the programme 
