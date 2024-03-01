@@ -47,6 +47,12 @@ void Customer::rent_request(std::vector<Car>& cars)
     cout << "Enter the id of the car to be rented : " ;
     cin >> carID;
     auto carIt = Car :: searchCarById(cars,carID);
+    if(carIt == nullptr)
+    {
+        cout << "Car not found" << endl;
+        rent_request(cars);
+        return;
+    }
 
     if(carIt->ownerID != 0 )
         cout << "This car is not available for rental" << endl;
@@ -92,15 +98,25 @@ void Customer :: return_request(vector<Car>& cars)
 
     cout << "Enter the date of return in DD-MM-YYYY format : ";
     cin >> date;
-    cout << "Enter the condition of the Car\n1 - Heavy Damage\n2 - Light Damage\n3 - Minor Scratches\n4 - Fine" << endl;
-    cin >> condition;
-
-    // Check if the input matches the pattern
     if (!parse_date(date,&d,&m,&y))
     {
         cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
         begin_session(cars);
     }
+    while(DateTime(y,m,d) - carIt->due_date <= 0)
+    {
+        cout << "Date of return must be at least one day from date of rental!" << endl;
+        cout << "Enter the date of return in DD-MM-YYYY format : ";
+        cin >> date;
+        if (!parse_date(date,&d,&m,&y))
+        {
+            cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
+            begin_session(cars);
+        }
+    }
+
+    cout << "Enter the condition of the Car\n1 - Heavy Damage\n2 - Light Damage\n3 - Minor Scratches\n4 - Fine" << endl;
+    cin >> condition;
 
     carIt->ownerID = 0;
     rented_cars.erase(remove(rented_cars.begin(), rented_cars.end(), carID), rented_cars.end());
@@ -563,13 +579,30 @@ void Employee :: return_request(vector<Car>& cars)
     carIt = Car :: searchCarById(cars,carID);
     if(carIt == nullptr)
     {
-        cout << "Car is not Rented by the Employee" << endl;
+        cout << "Car is not Rented by the Customer" << endl;
         begin_session(cars);
         return;
     }
 
     cout << "Enter the date of return in DD-MM-YYYY format : ";
     cin >> date;
+    if (!parse_date(date,&d,&m,&y))
+    {
+        cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
+        begin_session(cars);
+    }
+    while(DateTime(y,m,d) - carIt->due_date <= 0)
+    {
+        cout << "Date of return must be at least one day from date of rental!" << endl;
+        cout << "Enter the date of return in DD-MM-YYYY format : ";
+        cin >> date;
+        if (!parse_date(date,&d,&m,&y))
+        {
+            cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
+            begin_session(cars);
+        }
+    }
+    
     cout << "Enter the condition of the Car\n1 - Heavy Damage\n2 - Light Damage\n3 - Minor Scratches\n4 - Fine" << endl;
     cin >> condition;
 
