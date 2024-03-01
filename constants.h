@@ -19,5 +19,6 @@
 #define EMPLOYEE_RECORD 200 //default value
 #define RETURN_REWARD 200
 #define DAMAGE_PENALTY 50
+#define LATE_RECORD_CHARGE 20
 
 #endif 

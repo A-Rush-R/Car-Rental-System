@@ -604,7 +604,7 @@ void Employee :: return_request(vector<Car>& cars)
 
 void Employee :: update_record(int late_duration,int condition)
 {
-    record += 200 - 50 * ( 4 - condition) - late_duration;
+    record = record + 200 - 50 * ( 4 - condition ) - LATE_RECORD_CHARGE * late_duration;
 }
 
 int Employee :: show_due()
