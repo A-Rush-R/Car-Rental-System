@@ -1,8 +1,8 @@
-using namespace std;
 #include "user.h"
 #include "utils.h"
 #include<iomanip>
 #include "constants.h"
+using namespace std;
 
 
 int AVG_CUSTOMER_RECORD = CUSTOMER_RECORD;
@@ -12,6 +12,7 @@ User::User(std::string name, int id, std::string password)
     : name(name), id(id), password(password) {}
 
 Customer:: Customer(const string& name = "", int id = 0, const string& password = "", int fine_due = 0, int record = AVG_CUSTOMER_RECORD,const vector<int>& rented_cars = {}) : User(name, id, password), fine_due(fine_due), record(record), rented_cars(rented_cars) {}
+Employee :: Employee(const string& name = "", int id = 0, const string& password = "", int fine_due = 0, int record = AVG_EMPLOYEE_RECORD,const vector<int>& rented_cars = {}) : User(name, id, password), fine_due(fine_due), record(record), rented_cars(rented_cars) {}
 
 int Customer::show_due() {
     return fine_due;
@@ -38,10 +39,6 @@ void Employee :: show()
 
 void Customer::rent_request(std::vector<Car>& cars) 
 {
-    if( record < 100){
-        cout << "Not eligible to rent a car based on current record";
-        return;
-    }
     int carID;
     string date;
     int d,m,y;
@@ -83,6 +80,7 @@ void Customer::rent_request(std::vector<Car>& cars)
             rent_request(cars);
         }
     }
+        record -= THRESHOLD_RECORD;
         rented_cars.push_back(carID);
         carIt->rent_request(id,y_,m_,d_,y,m,d);
     }    
@@ -230,7 +228,8 @@ Customer* Customer::login(std::vector<Customer>& customers)  {
 
 void Customer :: update_record(int late_duration,int delta)
 {
-    record += RETURN_REWARD - DAMAGE_PENALTY *delta - late_duration;
+    record = record + RETURN_REWARD - DAMAGE_PENALTY *delta - LATE_RECORD_CHARGE*late_duration;
+    cout << "record is " << record << endl;
 }
 
 void Customer::updateCustomer(std::vector<Customer>& customers) 
@@ -319,7 +318,6 @@ void Customer :: show_customers(vector<Customer>& customers)
 
 
 
-Employee :: Employee(const string& name = "", int id = 0, const string& password = "", int fine_due = 0, int record = AVG_EMPLOYEE_RECORD,const vector<int>& rented_cars = {}) : User(name, id, password), fine_due(fine_due), record(record), rented_cars(rented_cars) {}
 void Employee :: set_password(string pass)
 {
     password = pass;
@@ -501,7 +499,7 @@ void Employee :: show_employees(vector<Employee>& Employees)
 
 void Employee :: rent_request(vector<Car>& cars)
 {
-    if( record < 100){
+    if( record < THRESHOLD_RECORD){
         cout << "Not eligible to rent a car based on current record";
         return;
     }
@@ -556,7 +554,7 @@ void Employee :: return_request(vector<Car>& cars)
     carIt = Car :: searchCarById(cars,carID);
     if(carIt == nullptr)
     {
-        cout << "Car is not Rented by the Customer" << endl;
+        cout << "Car is not Rented by the Employee" << endl;
         begin_session(cars);
         return;
     }
@@ -566,6 +564,7 @@ void Employee :: return_request(vector<Car>& cars)
     if (!parse_date(date,&d,&m,&y))
     {
         begin_session(cars);
+        return;
     }
     while(DateTime(y,m,d) - carIt->due_date <= 0)
     {
@@ -575,6 +574,7 @@ void Employee :: return_request(vector<Car>& cars)
         if (!parse_date(date,&d,&m,&y))
         {
             begin_session(cars);
+            return;
         }
     }
 
@@ -602,9 +602,10 @@ void Employee :: return_request(vector<Car>& cars)
     fine_due += fine;
 }
 
-void Employee :: update_record(int late_duration,int condition)
+void Employee :: update_record(int late_duration,int delta)
 {
-    record = record + 200 - 50 * ( 4 - condition ) - LATE_RECORD_CHARGE * late_duration;
+    record = record + RETURN_REWARD - DAMAGE_PENALTY* delta- LATE_RECORD_CHARGE * late_duration;
+    cout << "record is " << record << endl;
 }
 
 int Employee :: show_due()
@@ -895,7 +896,10 @@ void Customer :: begin_session(vector<Car>& cars)
             Car :: showcars(cars,id);
             break;
         case 2 :
-            rent_request(cars);
+            if(record > THRESHOLD_RECORD)
+                rent_request(cars);
+            else 
+                cout << "Not eligible for renting a car currently" << endl;
             break;
 
         case 3 :
@@ -951,7 +955,10 @@ void Employee :: begin_session(vector<Car>& cars)
             break;
 
         case 3 :
-            return_request(cars);
+            if( record > THRESHOLD_RECORD)
+                return_request(cars);
+            else 
+                cout << "Not eligible for renting a car currently" << endl;
             break;
         case 4 :
             cout << "Current dues : " << show_due() << endl;
@@ -969,9 +976,14 @@ void Employee :: begin_session(vector<Car>& cars)
             cin >> carID;
 
             carIt = Car :: searchCarById(cars,carID);
-
-            record += REPAIR_REWARD * (4 - condition); 
-            carIt->repair();
+            if(carIt == nullptr)
+                cout << "Car not found" << endl ;
+            else if (carIt->condition == FINE)
+                cout << "Car is already in good condition" << endl;
+            else{
+                record = record + REPAIR_REWARD * (FINE - carIt->condition); 
+                carIt->repair();
+            }
             break;
         case 6 :
             return;
@@ -1029,18 +1041,19 @@ void Customer :: saveToFile(const std::vector<Customer>& customers, const std::s
     }
 }
 
-void Employee :: saveToFile(const vector<Employee>& employees, const string& filename) {
+void Employee :: saveToFile(const vector<Employee>& employees, const string& filename) 
+{
     ofstream outFile(filename);
     if (outFile.is_open()) {
         for (const auto& employee : employees) {
-            outFile << employee.id << " " << employee.name << " " << employee.password  << " " << employee.fine_due << " " << employee.record;
-            // cout << employee.id << " " << employee.model << " " << employee.condition << endl;
+            outFile << employee.id << " " << employee.name << " " << employee.password  << " " << employee.fine_due << " " << employee.record ;
 
             outFile << " " << employee.rented_cars.size(); 
             for (int carID : employee.rented_cars) {
                 outFile << " " << carID; 
             }
             outFile << endl;
+
         }
         outFile.close();
         cout << "Records saved to " << filename << endl;
@@ -1091,12 +1104,12 @@ void Customer::loadFromFile(std::vector<Customer>& customers, const std::string&
         cerr << "Unable to open file " << filename << endl;
     }
 }
-
-void Employee :: loadFromFile(vector<Employee>& employees, const string& filename) {
-    int sum_record = 0;
+void Employee ::loadFromFile(std::vector<Employee>& employess, const std::string& filename) 
+{
     ifstream inFile(filename);
+    int sum_record = 0;
     if (inFile.is_open()) {
-        employees.clear(); // Clear existing data
+        employess.clear(); // Clear existing data
         int id, fine_due, record, numCars,carID;
         string name,password;
         vector<int> rented_cars;
@@ -1109,11 +1122,11 @@ void Employee :: loadFromFile(vector<Employee>& employees, const string& filenam
                 rented_cars.push_back(carID);
             }
             sum_record += record;
-            employees.push_back(Employee(name,id,password,fine_due,record,rented_cars));
+            employess.push_back(Employee(name,id,password,fine_due,record,rented_cars));
         }
         inFile.close();
-        if(!employees.size())
-            AVG_EMPLOYEE_RECORD = sum_record / employees.size();
+        if(!employess.size())
+            AVG_EMPLOYEE_RECORD = sum_record / employess.size();
         cout << "Records loaded from " << filename << endl;
     } else {
         cerr << "Unable to open file " << filename << endl;

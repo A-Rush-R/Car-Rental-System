@@ -20,5 +20,6 @@
 #define RETURN_REWARD 200
 #define DAMAGE_PENALTY 50
 #define LATE_RECORD_CHARGE 20
+#define THRESHOLD_RECORD 200
 
 #endif 

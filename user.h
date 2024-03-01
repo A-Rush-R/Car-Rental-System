@@ -53,8 +53,8 @@ class Employee : public User
         int record ;
     public : 
 
-        void set_password(string pass);
         Employee(const string& name, int id, const string& password, int fine_due, int record,const vector<int>& rented_cars);
+        void set_password(string pass);
 		int show_due();
         void clear_due();
         void show();
