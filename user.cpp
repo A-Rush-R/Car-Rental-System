@@ -541,6 +541,12 @@ void Employee :: rent_request(vector<Car>& cars)
     cout << "Enter the id of the car to be rented : " ;
     cin >> carID;
     auto carIt = Car :: searchCarById(cars,carID);
+    if(carIt == nullptr)
+    {
+        cout << "Car not found" << endl;
+        rent_request(cars);
+        return;
+    }
 
     if(carIt->ownerID != 0 )
         cout << "This car is not available for rental" << endl;
@@ -579,7 +585,7 @@ void Employee :: return_request(vector<Car>& cars)
     carIt = Car :: searchCarById(cars,carID);
     if(carIt == nullptr)
     {
-        cout << "Car is not Rented by the Customer" << endl;
+        cout << "Car is not Rented by the Employee" << endl;
         begin_session(cars);
         return;
     }
@@ -602,7 +608,7 @@ void Employee :: return_request(vector<Car>& cars)
             begin_session(cars);
         }
     }
-    
+
     cout << "Enter the condition of the Car\n1 - Heavy Damage\n2 - Light Damage\n3 - Minor Scratches\n4 - Fine" << endl;
     cin >> condition;
 
