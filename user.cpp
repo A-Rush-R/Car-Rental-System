@@ -549,7 +549,7 @@ void Employee :: rent_request(vector<Car>& cars)
     }    
 }
 
-void Customer :: return_request(vector<Car>& cars)
+void Employee :: return_request(vector<Car>& cars)
 {
     int carID;
     Car* carIt;
