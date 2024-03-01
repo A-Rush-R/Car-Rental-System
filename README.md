@@ -37,7 +37,9 @@ g++ user.o dateTime.o main.o car.o utils.o -o my_program
 ```
 
 ## Details
-- Repairing a car rewards the employee by increasing their record
+- Employees get a discount of 15% for renting cars
+- Employees have the option of repairing a car, which rewards them by increasing their record
+
 - An unexpected input will cause the program to terminate, but databases will be saved
 
 ## Assumptions 

@@ -27,9 +27,7 @@ int DateTime::getDay() const {
 
 string DateTime::display() const {
     std::ostringstream oss;
-    oss << std::setfill('0') << std::setw(4) << year << '-'
-        << std::setw(2) << month << '-'
-        << std::setw(2) << day;
+    oss << setfill('0') << setw(2) << day  << '-'<< setw(2) << month << '-' << setw(4) << year;
     return oss.str();
 }
 
