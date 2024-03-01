@@ -17,5 +17,7 @@
 #define DISCOUNT 0.15 //discount for the employees (between 0 and 1)
 #define CUSTOMER_RECORD 200 //default value
 #define EMPLOYEE_RECORD 200 //default value
+#define RETURN_REWARD 200
+#define DAMAGE_PENALTY 50
 
 #endif 

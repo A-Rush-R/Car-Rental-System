@@ -73,7 +73,7 @@ void Customer::rent_request(std::vector<Car>& cars)
         {
             rent_request(cars);
         }
-    while(DateTime(y_,m_,d_) - DateTime(y,m,d) >= 0)
+    while(DateTime(y_,m_,d_) - DateTime(y,m,d) <= 0)
     {
         cout << "Date of return must be at least one day from date of rental!" << endl;
         cout << "Enter the date of return in DD-MM-YYYY format : ";
@@ -112,6 +112,7 @@ void Customer :: return_request(vector<Car>& cars)
     if (!parse_date(date,&d,&m,&y))
     {
         begin_session(cars);
+        return;
     }
     while(DateTime(y,m,d) - carIt->due_date <= 0)
     {
@@ -121,6 +122,7 @@ void Customer :: return_request(vector<Car>& cars)
         if (!parse_date(date,&d,&m,&y))
         {
             begin_session(cars);
+            return;
         }
     }
 
@@ -129,6 +131,7 @@ void Customer :: return_request(vector<Car>& cars)
 
     carIt->ownerID = 0;
     rented_cars.erase(remove(rented_cars.begin(), rented_cars.end(), carID), rented_cars.end());
+    int delta = carIt->condition - condition;
     carIt->condition = condition;
 
     duration = carIt->due_date - carIt->rent_date;
@@ -137,6 +140,7 @@ void Customer :: return_request(vector<Car>& cars)
 
     late_duration = DateTime(y,m,d) - carIt->due_date;
     late_duration = late_duration > 0 ? late_duration : 0;
+    update_record(late_duration,delta);
 
     fine = carIt->rent*late_duration*PENALTY_CUSTOMER_FRAC + carIt->rent*(FINE - condition) ; //fine for late return and damage(if any)
     cout << "Fine charged for late return : " << carIt->rent*late_duration*PENALTY_CUSTOMER_FRAC << endl;
@@ -224,9 +228,9 @@ Customer* Customer::login(std::vector<Customer>& customers)  {
     }
 }
 
-void Customer :: update_record(int late_duration,int condition)
+void Customer :: update_record(int late_duration,int delta)
 {
-    record += 200 - 50 * ( FINE - condition) - late_duration;
+    record += RETURN_REWARD - DAMAGE_PENALTY *delta - late_duration;
 }
 
 void Customer::updateCustomer(std::vector<Customer>& customers) 
@@ -579,6 +583,7 @@ void Employee :: return_request(vector<Car>& cars)
 
     carIt->ownerID = 0;
     rented_cars.erase(remove(rented_cars.begin(), rented_cars.end(), carID), rented_cars.end());
+    int delta = carIt->condition - condition;
     carIt->condition = condition;
 
     duration = carIt->due_date - carIt->rent_date;
@@ -587,6 +592,7 @@ void Employee :: return_request(vector<Car>& cars)
 
     late_duration = DateTime(y,m,d) - carIt->due_date;
     late_duration = late_duration > 0 ? late_duration : 0;
+    update_record(late_duration,delta);
 
     fine = carIt->rent*late_duration*PENALTY_EMPLOYEE_FRAC + carIt->rent*(FINE - condition) ; //fine for late return and damage(if any)
     cout << "Fine charged for late return : " << carIt->rent*late_duration*PENALTY_EMPLOYEE_FRAC << endl;
