@@ -3,7 +3,7 @@ This repository consists of the codebase for a Car Rental System for the OOPS As
 
 ## Instructions 
 
-Run the following command to compile the programme 
+Run the following command to compile and run the programme 
 ```
 g++ -c main.cpp -o main.o
 g++ -c DateTime.cpp -o DateTime.o
