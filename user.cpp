@@ -836,6 +836,7 @@ void Manager :: show()
 
 void Customer :: begin_session(vector<Car>& cars) 
 {
+    cout << "-----------------" << endl;
     cout << "Welcome " << name << endl;
     cout << "-----------------" << endl;
     int k;
@@ -887,6 +888,7 @@ void Customer :: begin_session(vector<Car>& cars)
 }
 void Employee :: begin_session(vector<Car>& cars)
 {
+    cout << "-----------------" << endl;
     cout << "Welcome " << name << endl;
     cout << "-----------------" << endl;
     int k;
@@ -947,6 +949,7 @@ void Employee :: begin_session(vector<Car>& cars)
 }
 void Manager :: begin_session(vector<Customer>& customers, vector<Car>& cars, vector<Employee>& employees)
 {
+    cout << "-----------------" << endl;
     cout << "Welcome " << name << endl;
     cout << "-----------------" << endl;
     cout << "Choose an option\n1 - View the Records\n2 - Modify the Records\n3 - Exit" << endl;
