@@ -1,5 +1,5 @@
 using namespace std;
-#include "User.h"
+#include "user.h"
 #include "utils.h"
 #include<iomanip>
 #include "constants.h"
