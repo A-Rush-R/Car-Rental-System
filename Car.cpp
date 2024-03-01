@@ -17,7 +17,7 @@
 #define FINE 4 
 using namespace std;
 
-Car::Car(std::string model, int id, int condition, int rent, DateTime due_date, DateTime rent_date, int ownerID)
+Car::Car(std::string model, int id, int condition, int rent, DateTime rent_date, DateTime due_date, int ownerID)
     : id(id), model(model), condition(condition), rent(rent), due_date(due_date), rent_date(rent_date), ownerID(ownerID) {}
 
 void Car :: repair()
@@ -176,7 +176,9 @@ void Car :: showcars(vector<Car>& cars, int userID) {
         if(!cars.size())
             cout << "No cars available" << endl;
         else {
+            cout << "-----------------------------------------------------------------------------------------" << endl;
             cout << left << setw(8) << "ID" << setw(15) << "Model" << setw(20) << "Condition" << setw(12) << "Status" << setw(7) << "Rent" << setw(8) << "OwnerID" << setw(11) << "Rent-Date" << setw(10) << "Due-Date" << endl;
+            cout << "-----------------------------------------------------------------------------------------" << endl;
 
             for(auto& it : cars){
                 it.show();
@@ -199,12 +201,13 @@ void Car :: showcars(vector<Car>& cars, int userID) {
     }
 }
 
-void Car :: saveToFile(const vector<Car>& cars, const string& filename) {
+void Car::saveToFile(const vector<Car>& cars, const string& filename) {
     ofstream outFile(filename);
     if (outFile.is_open()) {
         for (const auto& car : cars) {
-            outFile << car.id << " " << car.model << " " << car.condition << " " << car.ownerID << " " << car.rent << " " << car.rent_date.getYear() << " " << car.rent_date.getMonth() << " " << car.rent_date.getDay() << " " << car.due_date.getYear() << " " << car.due_date.getMonth() << " " << car.due_date.getDay() << endl;
-            // cout << car.id << " " << car.model << " " << car.condition << endl;
+            outFile << car.id << " " << car.model << " " << car.condition << " " << car.ownerID << " " << car.rent << " " 
+                    << car.rent_date.getYear() << " " << car.rent_date.getMonth() << " " << car.rent_date.getDay() << " " 
+                    << car.due_date.getYear() << " " << car.due_date.getMonth() << " " << car.due_date.getDay() << endl;
         }
         outFile.close();
         cout << "Records saved to " << filename << endl;
@@ -213,22 +216,22 @@ void Car :: saveToFile(const vector<Car>& cars, const string& filename) {
     }
 }
 
-void Car :: loadFromFile(std::vector<Car>& cars, const std::string& filename){
+void Car::loadFromFile(std::vector<Car>& cars, const std::string& filename) {
     ifstream inFile(filename);
     if (inFile.is_open()) { 
         cars.clear(); // Clear existing data
         int id, condition, ownerID, rent;
         string model;
-        int y,m,d;
-        int y_,m_,d_;
+        int y, m, d; 
+        int y_, m_, d_; 
 
         while (inFile >> id >> model >> condition >> ownerID >> rent >> y_ >> m_ >> d_ >> y >> m >> d) {
-            cars.push_back(Car(model,id,condition,rent,DateTime(y_,m_,d_),DateTime(y,m,d),ownerID));
+            cars.push_back(Car(model, id, condition, rent, DateTime(y_, m_, d_), DateTime(y, m, d), ownerID));
         }
         inFile.close();
         cout << "Records loaded from " << filename << endl;
     } else {
-    cerr << "Unable to open file " << filename << endl;
+        cerr << "Unable to open file " << filename << endl;
     }
 }
 

@@ -277,7 +277,9 @@ Customer* Customer::searchCustomerById(std::vector<Customer>& customers, int cus
 
 void Customer :: show_customers(vector<Customer>& customers) 
 {
+    cout << "-------------------------------------------------------------------------------------------" << endl;
     cout << left << setw(8) << "ID" << setw(NAME_CAP) << "Name" << setw(10) << "Fine" << setw(18) << "Customer-Record" << setw(8) << "Rented-Cars" << endl;
+    cout << "-------------------------------------------------------------------------------------------" << endl;
     for (auto& it : customers)
         it.show();
 }
@@ -423,7 +425,9 @@ void Employee :: deleteEmployee(vector<Employee>& Employees) {
 
 void Employee :: show_employees(vector<Employee>& Employees)
 {
+    cout << "-------------------------------------------------------------------------------------------" << endl;
     cout << left << setw(8) << "ID" << setw(NAME_CAP) << "Name" << setw(10) << "Fine" << setw(18) << "Employee-Record" << setw(8) << "Rented-Cars" << endl;
+    cout << "-------------------------------------------------------------------------------------------" << endl;
     for (auto& it : Employees)
         it.show();
 }
