@@ -17,6 +17,7 @@ g++ user.o DateTime.o main.o Car.o utils.o -o my_program
 ## Details
 
 - Repairing a car rewards the employee by increasing their record
+- An unexpected input will cause the program to terminate, but databases will be saved
 
 ## Pending 
 

@@ -922,7 +922,7 @@ void Manager :: begin_session(vector<Customer>& customers, vector<Car>& cars, ve
     begin_session(customers,cars,employees);
 }
 
-void Customer::saveToFile(const std::vector<Customer>& customers, const std::string& filename) 
+void Customer :: saveToFile(const std::vector<Customer>& customers, const std::string& filename) 
 {
     ofstream outFile(filename);
     if (outFile.is_open()) {

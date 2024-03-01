@@ -31,7 +31,7 @@ int main()
     vector<Manager> managers;
     
     load(cars,customers,employees,managers);
-    
+
     // Customer :: show_customers(customers);
     // Employee :: show_employees(employees);
     // Manager :: show_managers(managers);
@@ -49,7 +49,7 @@ int main()
     cout << "----------------------------" << endl ;
 
     cout << "New user or previous user ?" <<  endl;
-    cout << "0 - New User \n1 - Previous User\n" << endl;
+    cout << "1 - New User \n2 - Previous User\nAny other key - Exit" << endl;
 
     /// Driver Code
     cin >> k;
@@ -64,13 +64,13 @@ int main()
     switch(k)
     {
         //registering a new customer
-        case 0 : 
+        case 1 : 
             Customer :: addCustomer(customers);
             cout << "Customer registered successfully, run again to login" << endl;
             break;
         //previous customer/employee/manager
-        case 1 :
-            cout << "Enter the type of user :\n1 - Customer\n2 - Employee\n3 - Manager" << endl;
+        case 2 :
+            cout << "Enter the type of user :\n1 - Customer\n2 - Employee\n3 - Manager\nAny other key - Exit" << endl;
             cin >> j;
             switch(j)
             {
@@ -90,11 +90,14 @@ int main()
                     	it3 = Manager :: login(managers);
                     it3->begin_session(customers,cars,employees);
                     break;
+                default:
+                    cout << "Thank You !" << endl;
             }
 			break;
 		default :
-			cout << "Invalid Input" << endl;
+			cout << "Thank You !" << endl;
     }
+    
     save(cars,customers,employees,managers);
 
     return 0;
