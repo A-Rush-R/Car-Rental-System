@@ -55,8 +55,8 @@ void Car :: show() const {
 
 int Car::rent_request(int id, int y, int m, int d, int y_, int m_, int d_) {
     ownerID = id;
-    rent_date = DateTime(y, m, d);
-    due_date = DateTime(y_, m_, d_);
+    due_date = DateTime(y, m, d);
+    rent_date = DateTime(y_, m_, d_);
     return 0;
 }
 

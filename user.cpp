@@ -1,12 +1,14 @@
 using namespace std;
 #include "User.h"
 #include "utils.h"
+#include<iomanip>
 #define PENALTY_CUSTOMER_FRAC 2
 #define PENALTY_EMPLOYEE_FRAC 1.5
 #define CUSTOMER_BEGIN_ID 200001
 #define EMPLOYEE_BEGIN_ID 300001
 #define MANAGER_BEGIN_ID 400001
 #define REPAIR_REWARD 50
+#define NAME_CAP 20
 
 
 int AVG_CUSTOMER_RECORD = 100;
@@ -26,11 +28,18 @@ void Customer::clear_due() {
 }
 
 void Customer::show() {
-    std::cout << id << " " << name << " " << fine_due << " " << record << std::endl;
-    std::cout << "List of Rented Car is ";
+    cout << left << setw(8) << id << setw(NAME_CAP) << name << setw(10) << fine_due << setw(18) << record ;
     for (auto& it : rented_cars)
-        std::cout << it << "\t";
-    std::cout << std::endl;
+        cout << setw(8) << it ;
+    cout << endl;
+}
+
+void Employee :: show() 
+{
+    cout << left << setw(8) << id << setw(NAME_CAP) << name << setw(10) << fine_due << setw(18) << record ;
+    for (auto& it : rented_cars)
+        cout << setw(8) << it ;
+    cout << endl;
 }
 
 void Customer::rent_request(std::vector<Car>& cars) 
@@ -268,6 +277,7 @@ Customer* Customer::searchCustomerById(std::vector<Customer>& customers, int cus
 
 void Customer :: show_customers(vector<Customer>& customers) 
 {
+    cout << left << setw(8) << "ID" << setw(NAME_CAP) << "Name" << setw(10) << "Fine" << setw(18) << "Customer-Record" << setw(8) << "Rented-Cars" << endl;
     for (auto& it : customers)
         it.show();
 }
@@ -285,15 +295,6 @@ void Employee :: clear_due()
     fine_due = 0;
 }        
 
-void Employee :: show() 
-{
-    cout << id << " " << name << " " << fine_due << " " << record << endl;
-    cout << "List of Rented Cars is ";
-    for( auto& it : rented_cars)
-        cout << it << "\t" ;
-    cout << endl;
-    // Car :: showcars(rented_cars);
-}
 
 void Employee :: addEmployee(vector<Employee>& employees) {
     string name,password,temp;
@@ -422,9 +423,11 @@ void Employee :: deleteEmployee(vector<Employee>& Employees) {
 
 void Employee :: show_employees(vector<Employee>& Employees)
 {
-    for(auto& it : Employees)
+    cout << left << setw(8) << "ID" << setw(NAME_CAP) << "Name" << setw(10) << "Fine" << setw(18) << "Employee-Record" << setw(8) << "Rented-Cars" << endl;
+    for (auto& it : Employees)
         it.show();
 }
+
 
 void Employee :: rent_request(vector<Car>& cars)
 {
@@ -781,10 +784,10 @@ void Manager :: modify_records(vector<Customer>& customers, vector<Car>& cars, v
 
 void Manager :: show()
 {
-    cout << id << " " << name << endl;
+    cout << left << setw(8) << id << setw(NAME_CAP) << name << endl;
 }
 
-void Customer :: begin_session(std::vector<Car>& cars) 
+void Customer :: begin_session(vector<Car>& cars) 
 {
     cout << "Welcome " << name << endl;
     cout << "-----------------" << endl;

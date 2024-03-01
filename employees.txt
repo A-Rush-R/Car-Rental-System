@@ -1,5 +1,5 @@
-300001 Jignesh_Patidar gruh 0 100 0
-300002 CJ hmpf 0 100 0
-300003 MJ RR 0 100 0
+300001 Jignesh_Patidar gruh 0 200 0
+300002 CJ hmpf 0 50 0
+300003 MJ RR 0 10 0
 300004 Tesseract police 0 100 0
 300005 modifyMan hihi 0 100 0

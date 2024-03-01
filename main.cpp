@@ -29,11 +29,22 @@ int main()
     vector<Customer> customers;
     vector<Employee> employees;
     vector<Manager> managers;
-
+    
     load(cars,customers,employees,managers);
+    
+    // Customer :: show_customers(customers);
+    // Employee :: show_employees(employees);
+    // Manager :: show_managers(managers);
+    // Car :: showcars(cars,400001);
+
+    // for(auto& it : cars)
+    // {
+    //     it.repair();
+    // }
 
 
     int k;
+    cout << "----------------------------" << endl ;
     cout << "Welcome to Car Rental System" << endl ;
     cout << "----------------------------" << endl ;
 

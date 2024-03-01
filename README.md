@@ -21,5 +21,4 @@ g++ user.o DateTime.o main.o Car.o utils.o -o my_program
 ## Pending 
 
 - Update functions for customer,manager and employee
-- Printing format of customer,employee and manager database
 - 15% discount for employee (show in the database and also while calculating fees)
