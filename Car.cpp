@@ -46,10 +46,10 @@ void Car :: show() const {
             condition_name = "Fine";
             break;
     }
-    cout << left << setw(7) << id << setw(15) << model << setw(20) << condition_name << setw(15) << status << setw(10) << rent ;
+    cout << left << setw(8) << id << setw(15) << model << setw(20) << condition_name << setw(12) << status << setw(7) << rent ;
     // cout << id << " " << model << " " << condition_name << " " << status << " "  << rent << " ";
     if(ownerID != 0)  
-        cout << setw(7) << ownerID  << setw(10) << rent_date.display() << setw(10) <<  due_date.display();
+        cout << setw(8) << ownerID  << setw(11) << rent_date.display() << setw(10) <<  due_date.display();
     cout << endl;
 }
 
@@ -176,7 +176,7 @@ void Car :: showcars(vector<Car>& cars, int userID) {
         if(!cars.size())
             cout << "No cars available" << endl;
         else {
-            cout << left << setw(7) << "ID" << setw(15) << "Model" << setw(20) << "Condition" << setw(15) << "Status" << setw(10) << "Rent" << setw(8) << "OwnerID" << setw(10) << "Rent Date" << setw(20) << "Due Date" << endl;
+            cout << left << setw(8) << "ID" << setw(15) << "Model" << setw(20) << "Condition" << setw(12) << "Status" << setw(7) << "Rent" << setw(8) << "OwnerID" << setw(11) << "Rent-Date" << setw(10) << "Due-Date" << endl;
 
             for(auto& it : cars){
                 it.show();
@@ -188,7 +188,7 @@ void Car :: showcars(vector<Car>& cars, int userID) {
         {
             if(it.ownerID == userID || it.ownerID == 0){
                 if (count == 0)
-                    cout << left << setw(7) << "ID" << setw(15) << "Model" << setw(20) << "Condition" << setw(15) << "Status" << setw(10) << "Rent" << setw(8) << "OwnerID" << setw(10) << "Rent-Date" << setw(20) << "Due Date" << endl;
+                    cout << left << setw(8) << "ID" << setw(15) << "Model" << setw(20) << "Condition" << setw(12) << "Status" << setw(7) << "Rent" << setw(8) << "OwnerID" << setw(11) << "Rent-Date" << setw(10) << "Due-Date" << endl;
 
                 it.show();
                 count ++;

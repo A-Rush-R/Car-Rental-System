@@ -89,6 +89,5 @@ int main()
     return 0;
 }
 
-// correct the formatting during priting
-// if customer is requesting to see car database, owner id should not show
+// correct the formatting during printing
 // 15% dicsount for employee, so if employee is viewing then 85% of the rent is displayed as well as accounted for during payment

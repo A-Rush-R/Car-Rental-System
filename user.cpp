@@ -71,6 +71,55 @@ void Customer::rent_request(std::vector<Car>& cars)
     }    
 }
 
+void Customer :: return_request(vector<Car>& cars)
+{
+    int carID;
+    Car* carIt;
+    string date;
+    int condition;
+    int d,m,y;
+    int fine,duration,payable_rent,late_duration;
+
+    cout << "Enter the id of the car to be returned : " ;
+    cin >> carID;
+    carIt = Car :: searchCarById(cars,carID);
+    if(carIt == nullptr)
+    {
+        cout << "Car is not Rented by the Customer" << endl;
+        begin_session(cars);
+        return;
+    }
+
+    cout << "Enter the date of return in DD-MM-YYYY format : ";
+    cin >> date;
+    cout << "Enter the condition of the Car\n1 - Heavy Damage\n2 - Light Damage\n3 - Minor Scratches\n4 - Fine" << endl;
+    cin >> condition;
+
+    // Check if the input matches the pattern
+    if (!parse_date(date,&d,&m,&y))
+    {
+        cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
+        begin_session(cars);
+    }
+
+    carIt->ownerID = 0;
+    rented_cars.erase(remove(rented_cars.begin(), rented_cars.end(), carID), rented_cars.end());
+    carIt->condition = condition;
+
+    duration = carIt->due_date - carIt->rent_date;
+    payable_rent = duration*carIt->rent;
+    cout << "Amount to be paid is : " << payable_rent << endl;
+
+    late_duration = DateTime(y,m,d) - carIt->due_date;
+    late_duration = late_duration > 0 ? late_duration : 0;
+
+    fine = carIt->rent*late_duration*PENALTY_CUSTOMER_FRAC + carIt->rent*(4 - condition) ; //fine for late return and damage(if any)
+    cout << "Fine charged for late return : " << carIt->rent*late_duration*PENALTY_CUSTOMER_FRAC << endl;
+    cout << "Fine charged for damages : " << carIt->rent*(4 - condition) << endl;
+    cout << "Total fine : " << fine << endl;
+
+    fine_due += fine;
+}
 
 void Customer::addCustomer(std::vector<Customer>& customers) 
 {
@@ -236,38 +285,7 @@ void Customer :: begin_session(std::vector<Car>& cars)
             break;
 
         case 3 :
-            cout << "Enter the id of the car to be returned : " ;
-            cin >> carID;
-            cout << "Enter the date of return in DD-MM-YYYY format : ";
-            cin >> date;
-            cout << "Enter the condition of the Car\n1 - Heavy Damage\n2 - Light Damage\n3 - Minor Scratches\n4 - Fine" << endl;
-            cin >> condition;
-
-            // Check if the input matches the pattern
-            if (!parse_date(date,&d,&m,&y))
-            {
-                cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
-                begin_session(cars);
-            }
-
-            carIt = Car :: searchCarById(cars,carID);
-            carIt->ownerID = 0;
-            rented_cars.erase(remove(rented_cars.begin(), rented_cars.end(), carID), rented_cars.end());
-            carIt->condition = condition;
-
-            duration = carIt->due_date - carIt->rent_date;
-            payable_rent = duration*carIt->rent;
-            cout << "Amount to be paid is : " << payable_rent << endl;
-
-            late_duration = DateTime(y,m,d) - carIt->due_date;
-            late_duration = late_duration > 0 ? late_duration : 0;
-
-            fine = carIt->rent*late_duration*PENALTY_CUSTOMER_FRAC + carIt->rent*(4 - condition) ; //fine for late return and damage(if any)
-            cout << "Fine charged for late return : " << carIt->rent*late_duration*PENALTY_CUSTOMER_FRAC << endl;
-            cout << "Fine charged for damages : " << carIt->rent*(4 - condition) << endl;
-            cout << "Total fine : " << fine << endl;
-
-            fine_due += fine;
+            return_request(cars);
             break;
         case 4 :
             cout << "Current dues : " << show_due() << endl;
@@ -528,6 +546,56 @@ void Employee :: rent_request(vector<Car>& cars)
     }    
 }
 
+void Customer :: return_request(vector<Car>& cars)
+{
+    int carID;
+    Car* carIt;
+    string date;
+    int condition;
+    int d,m,y;
+    int fine,duration,payable_rent,late_duration;
+
+    cout << "Enter the id of the car to be returned : " ;
+    cin >> carID;
+    carIt = Car :: searchCarById(cars,carID);
+    if(carIt == nullptr)
+    {
+        cout << "Car is not Rented by the Employee" << endl;
+        begin_session(cars);
+        return;
+    }
+
+    cout << "Enter the date of return in DD-MM-YYYY format : ";
+    cin >> date;
+    cout << "Enter the condition of the Car\n1 - Heavy Damage\n2 - Light Damage\n3 - Minor Scratches\n4 - Fine" << endl;
+    cin >> condition;
+
+    // Check if the input matches the pattern
+    if (!parse_date(date,&d,&m,&y))
+    {
+        cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
+        begin_session(cars);
+    }
+
+    carIt->ownerID = 0;
+    rented_cars.erase(remove(rented_cars.begin(), rented_cars.end(), carID), rented_cars.end());
+    carIt->condition = condition;
+
+    duration = carIt->due_date - carIt->rent_date;
+    payable_rent = duration*carIt->rent;
+    cout << "Amount to be paid is : " << payable_rent << endl;
+
+    late_duration = DateTime(y,m,d) - carIt->due_date;
+    late_duration = late_duration > 0 ? late_duration : 0;
+
+    fine = carIt->rent*late_duration*PENALTY_EMPLOYEE_FRAC + carIt->rent*(4 - condition) ; //fine for late return and damage(if any)
+    cout << "Fine charged for late return : " << carIt->rent*late_duration*PENALTY_EMPLOYEE_FRAC << endl;
+    cout << "Fine charged for damages : " << carIt->rent*(4 - condition) << endl;
+    cout << "Total fine : " << fine << endl;
+
+    fine_due += fine;
+}
+
 void Employee :: update_record(int late_duration,int condition)
 {
     record += 200 - 50 * ( 4 - condition) - late_duration;
@@ -567,38 +635,7 @@ void Employee :: begin_session(vector<Car>& cars)
             break;
 
         case 3 :
-            cout << "Enter the id of the car to be returned : " ;
-            cin >> carID;
-            cout << "Enter the date of return in DD-MM-YYYY format : ";
-            cin >> date;
-            cout << "Enter the condition of the Car\n1 - Heavy Damage\n2 - Light Damage\n3 - Minor Scratches\n4 - Fine" << endl;
-            cin >> condition;
-
-            // Check if the input matches the pattern
-            if (!parse_date(date,&d,&m,&y))
-            {
-                cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
-                begin_session(cars);
-            }
-
-            carIt = Car :: searchCarById(cars,carID);
-            carIt->ownerID = 0;
-            rented_cars.erase(remove(rented_cars.begin(), rented_cars.end(), carID), rented_cars.end());
-            carIt->condition = condition;
-
-            duration = carIt->due_date - carIt->rent_date;
-            payable_rent = duration*carIt->rent;
-            cout << "Amount to be paid is : " << payable_rent << endl;
-
-            late_duration = DateTime(y,m,d) - carIt->due_date;
-            late_duration = late_duration > 0 ? late_duration : 0;
-
-            fine = carIt->rent*late_duration*PENALTY_EMPLOYEE_FRAC + carIt->rent*(4 - condition) ; //fine for late return and damage(if any)
-            cout << "Fine charged for late return : " << carIt->rent*late_duration*PENALTY_EMPLOYEE_FRAC << endl;
-            cout << "Fine charged for damages : " << carIt->rent*(4 - condition) << endl;
-            cout << "Total fine : " << fine << endl;
-            update_record(late_duration,condition);
-            fine_due += fine;
+            return_request(cars);
             break;
         case 4 :
             cout << "Current dues : " << show_due() << endl;

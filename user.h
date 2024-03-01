@@ -41,6 +41,7 @@ class Customer : public User
         static void show_customers(vector<Customer>& customers);
         static Customer* searchCustomerById(vector<Customer>& Customers, int CustomerId);
         void rent_request(vector<Car>& cars);
+        void return_request(vector<Car>& cars);
         void begin_session(vector<Car>& cars);
         static void saveToFile(const vector<Customer>& customers, const string& filename);
         static void loadFromFile(vector<Customer>& customers, const string& filename);
@@ -65,6 +66,7 @@ class Employee : public User
         static void show_employees(vector<Employee>& employees);
         static Employee* searchEmployeeById(vector<Employee>& employees, int EmployeeId);
         void rent_request(vector<Car>& cars);
+        void return_request(vector<Car>& cars);
         void begin_session(vector<Car>& cars);
         static void saveToFile(const vector<Employee>& employees, const string& filename);
         static void loadFromFile(vector<Employee>& employees, const string& filename);
