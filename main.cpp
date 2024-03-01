@@ -88,6 +88,3 @@ int main()
 
     return 0;
 }
-
-// correct the formatting during printing
-// 15% dicsount for employee, so if employee is viewing then 85% of the rent is displayed as well as accounted for during payment

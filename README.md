@@ -17,3 +17,9 @@ g++ user.o DateTime.o main.o Car.o utils.o -o my_program
 ## Details
 
 - Repairing a car rewards the employee by increasing their record
+
+## Pending 
+
+- Upadate functions for customer,manager and employee
+- Printing format of customer,employee and manager database
+- 15% discount for employee (show in the database and also while calculating fees)

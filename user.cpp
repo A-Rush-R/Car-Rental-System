@@ -272,108 +272,7 @@ void Customer :: show_customers(vector<Customer>& customers)
         it.show();
 }
 
-void Customer :: begin_session(std::vector<Car>& cars) 
-{
-    cout << "Welcome " << name << endl;
-    cout << "-----------------" << endl;
-    int k;
-    cout << "Choose an option\n1 - Show Available Cars\n2 - Rent a Car\n3 - Return a Car\n4 - Clear Dues\n5 - Exit" << endl;
-    cin >> k;
 
-    char delimiter;
-
-    string date;
-    int late_duration;
-    int duration;
-
-    int fine,condition;
-    int payable_rent;
-    Car* carIt;
-    int d,m,y;
-    int carID;
-    switch(k)
-    {
-        case 1 :
-            Car :: showcars(cars,id);
-            break;
-        case 2 :
-            rent_request(cars);
-            break;
-
-        case 3 :
-            return_request(cars);
-            break;
-        case 4 :
-            cout << "Current dues : " << show_due() << endl;
-            if(!show_due())
-                cout << "No dues" << endl;
-            else{
-                cout << "Do you want to pay dues ?\n1 - Yes\n2 - No" << endl;
-                cin >> k;
-                if(k == 1)
-                    clear_due();
-            }
-            break;
-        case 5 :
-            return;
-            break;
-        default :
-            cout << "Enter a valid option" << endl;
-            break;
-    }
-    begin_session(cars);
-}
-
-void Customer::saveToFile(const std::vector<Customer>& customers, const std::string& filename) 
-{
-    ofstream outFile(filename);
-    if (outFile.is_open()) {
-        for (const auto& customer : customers) {
-            outFile << customer.id << " " << customer.name << " " << customer.password  << " " << customer.fine_due << " " << customer.record ;
-            // cout << Customer.id << " " << Customer.model << " " << Customer.condition << endl;
-
-            outFile << " " << customer.rented_cars.size(); 
-            for (int carID : customer.rented_cars) {
-                outFile << " " << carID; 
-            }
-            outFile << endl;
-
-        }
-        outFile.close();
-        cout << "Records saved to " << filename << endl;
-    } else {
-        cerr << "Unable to open file " << filename << endl;
-    }
-}
-
-void Customer::loadFromFile(std::vector<Customer>& customers, const std::string& filename) 
-{
-    ifstream inFile(filename);
-    int sum_record = 0;
-    if (inFile.is_open()) {
-        customers.clear(); // Clear existing data
-        int id, fine_due, record, numCars,carID;
-        string name,password;
-        vector<int> rented_cars;
-
-        while (inFile >> id >> name >> password >> fine_due >> record >> numCars) {
-
-            for(int i=0 ; i<numCars ; i++)
-            {
-                cin >> carID;
-                rented_cars.push_back(carID);
-            }
-            sum_record += record;
-            customers.push_back(Customer(name,id,password,fine_due,record,rented_cars));
-        }
-        inFile.close();
-        if(!customers.size())
-            AVG_CUSTOMER_RECORD = sum_record / customers.size();
-        cout << "Records loaded from " << filename << endl;
-    } else {
-        cerr << "Unable to open file " << filename << endl;
-    }
-}
 
 Employee :: Employee(const string& name = "", int id = 0, const string& password = "", int fine_due = 0, int record = AVG_EMPLOYEE_RECORD,const vector<int>& rented_cars = {}) : User(name, id, password), fine_due(fine_due), record(record), rented_cars(rented_cars) {}
 void Employee :: set_password(string pass)
@@ -648,114 +547,7 @@ int Employee :: show_due()
     return fine_due;
 }
 
-void Employee :: begin_session(vector<Car>& cars)
-{
-    cout << "Welcome " << name << endl;
-    cout << "-----------------" << endl;
-    int k;
-    cout << "Choose an option\n1 - Show Available Cars\n2 - Rent a Car\n3 - Return a Car\n4 - Clear Dues\n5 - Repair Car\n6 - Exit" << endl;
-    cin >> k;
 
-    char delimiter;
-
-    string date;
-    int late_duration;
-    int duration;
-
-    int fine,condition;
-    int payable_rent;
-    Car* carIt;
-    int d,m,y;
-    int carID;
-    switch(k)
-    {
-        case 1 :
-            Car :: showcars(cars,id);
-            break;
-        case 2 :
-            rent_request(cars);
-            break;
-
-        case 3 :
-            return_request(cars);
-            break;
-        case 4 :
-            cout << "Current dues : " << show_due() << endl;
-            if(!show_due())
-                cout << "No dues" << endl;
-            else{
-                cout << "Do you want to pay dues ?\n1 - Yes\n2 - No" << endl;
-                cin >> k;
-                if(k == 1)
-                    clear_due();
-            }
-            break;
-        case 5 :
-            cout << "Enter the ID of the car to be Repaired : ";
-            cin >> carID;
-
-            carIt = Car :: searchCarById(cars,carID);
-
-            record += REPAIR_REWARD * (4 - condition); 
-            carIt->repair();
-            break;
-        case 6 :
-            return;
-            break;
-        default :
-            cout << "Enter a valid option" << endl;
-            break;
-    }
-    begin_session(cars);
-}
-
-void Employee :: saveToFile(const vector<Employee>& employees, const string& filename) {
-    ofstream outFile(filename);
-    if (outFile.is_open()) {
-        for (const auto& employee : employees) {
-            outFile << employee.id << " " << employee.name << " " << employee.password  << " " << employee.fine_due << " " << employee.record;
-            // cout << employee.id << " " << employee.model << " " << employee.condition << endl;
-
-            outFile << " " << employee.rented_cars.size(); 
-            for (int carID : employee.rented_cars) {
-                outFile << " " << carID; 
-            }
-            outFile << endl;
-        }
-        outFile.close();
-        cout << "Records saved to " << filename << endl;
-    } else {
-        cerr << "Unable to open file " << filename << endl;
-    }
-}
-
-void Employee :: loadFromFile(vector<Employee>& employees, const string& filename) {
-    int sum_record = 0;
-    ifstream inFile(filename);
-    if (inFile.is_open()) {
-        employees.clear(); // Clear existing data
-        int id, fine_due, record, numCars,carID;
-        string name,password;
-        vector<int> rented_cars;
-
-        while (inFile >> id >> name >> password >> fine_due >> record >> numCars) {
-
-            for(int i=0 ; i<numCars ; i++)
-            {
-                cin >> carID;
-                rented_cars.push_back(carID);
-            }
-            sum_record += record;
-            employees.push_back(Employee(name,id,password,fine_due,record,rented_cars));
-        }
-        inFile.close();
-        if(!employees.size())
-            AVG_EMPLOYEE_RECORD = sum_record / employees.size();
-        cout << "Records loaded from " << filename << endl;
-    } else {
-        cerr << "Unable to open file " << filename << endl;
-    }
-}
 
 void Manager :: set_password( string pass) {password = pass;} 
 Manager :: Manager(const string& name = "", int id = 0, const string& password = "") : User(name, id, password){}
@@ -992,6 +784,117 @@ void Manager :: show()
     cout << id << " " << name << endl;
 }
 
+void Customer :: begin_session(std::vector<Car>& cars) 
+{
+    cout << "Welcome " << name << endl;
+    cout << "-----------------" << endl;
+    int k;
+    cout << "Choose an option\n1 - Show Available Cars\n2 - Rent a Car\n3 - Return a Car\n4 - Clear Dues\n5 - Exit" << endl;
+    cin >> k;
+
+    char delimiter;
+
+    string date;
+    int late_duration;
+    int duration;
+
+    int fine,condition;
+    int payable_rent;
+    Car* carIt;
+    int d,m,y;
+    int carID;
+    switch(k)
+    {
+        case 1 :
+            Car :: showcars(cars,id);
+            break;
+        case 2 :
+            rent_request(cars);
+            break;
+
+        case 3 :
+            return_request(cars);
+            break;
+        case 4 :
+            cout << "Current dues : " << show_due() << endl;
+            if(!show_due())
+                cout << "No dues" << endl;
+            else{
+                cout << "Do you want to pay dues ?\n1 - Yes\n2 - No" << endl;
+                cin >> k;
+                if(k == 1)
+                    clear_due();
+            }
+            break;
+        case 5 :
+            return;
+            break;
+        default :
+            cout << "Enter a valid option" << endl;
+            break;
+    }
+    begin_session(cars);
+}
+void Employee :: begin_session(vector<Car>& cars)
+{
+    cout << "Welcome " << name << endl;
+    cout << "-----------------" << endl;
+    int k;
+    cout << "Choose an option\n1 - Show Available Cars\n2 - Rent a Car\n3 - Return a Car\n4 - Clear Dues\n5 - Repair Car\n6 - Exit" << endl;
+    cin >> k;
+
+    char delimiter;
+
+    string date;
+    int late_duration;
+    int duration;
+
+    int fine,condition;
+    int payable_rent;
+    Car* carIt;
+    int d,m,y;
+    int carID;
+    switch(k)
+    {
+        case 1 :
+            Car :: showcars(cars,id);
+            break;
+        case 2 :
+            rent_request(cars);
+            break;
+
+        case 3 :
+            return_request(cars);
+            break;
+        case 4 :
+            cout << "Current dues : " << show_due() << endl;
+            if(!show_due())
+                cout << "No dues" << endl;
+            else{
+                cout << "Do you want to pay dues ?\n1 - Yes\n2 - No" << endl;
+                cin >> k;
+                if(k == 1)
+                    clear_due();
+            }
+            break;
+        case 5 :
+            cout << "Enter the ID of the car to be Repaired : ";
+            cin >> carID;
+
+            carIt = Car :: searchCarById(cars,carID);
+
+            record += REPAIR_REWARD * (4 - condition); 
+            carIt->repair();
+            break;
+        case 6 :
+            return;
+            break;
+        default :
+            cout << "Enter a valid option" << endl;
+            break;
+    }
+    begin_session(cars);
+}
 void Manager :: begin_session(vector<Customer>& customers, vector<Car>& cars, vector<Employee>& employees)
 {
     cout << "Welcome " << name << endl;
@@ -1016,6 +919,48 @@ void Manager :: begin_session(vector<Customer>& customers, vector<Car>& cars, ve
     begin_session(customers,cars,employees);
 }
 
+void Customer::saveToFile(const std::vector<Customer>& customers, const std::string& filename) 
+{
+    ofstream outFile(filename);
+    if (outFile.is_open()) {
+        for (const auto& customer : customers) {
+            outFile << customer.id << " " << customer.name << " " << customer.password  << " " << customer.fine_due << " " << customer.record ;
+            // cout << Customer.id << " " << Customer.model << " " << Customer.condition << endl;
+
+            outFile << " " << customer.rented_cars.size(); 
+            for (int carID : customer.rented_cars) {
+                outFile << " " << carID; 
+            }
+            outFile << endl;
+
+        }
+        outFile.close();
+        cout << "Records saved to " << filename << endl;
+    } else {
+        cerr << "Unable to open file " << filename << endl;
+    }
+}
+
+void Employee :: saveToFile(const vector<Employee>& employees, const string& filename) {
+    ofstream outFile(filename);
+    if (outFile.is_open()) {
+        for (const auto& employee : employees) {
+            outFile << employee.id << " " << employee.name << " " << employee.password  << " " << employee.fine_due << " " << employee.record;
+            // cout << employee.id << " " << employee.model << " " << employee.condition << endl;
+
+            outFile << " " << employee.rented_cars.size(); 
+            for (int carID : employee.rented_cars) {
+                outFile << " " << carID; 
+            }
+            outFile << endl;
+        }
+        outFile.close();
+        cout << "Records saved to " << filename << endl;
+    } else {
+        cerr << "Unable to open file " << filename << endl;
+    }
+}
+
 void Manager :: saveToFile(const vector<Manager>& managers, const string& filename) {
     ofstream outFile(filename);
     if (outFile.is_open()) {
@@ -1025,6 +970,63 @@ void Manager :: saveToFile(const vector<Manager>& managers, const string& filena
         }
         outFile.close();
         cout << "Records saved to " << filename << endl;
+    } else {
+        cerr << "Unable to open file " << filename << endl;
+    }
+}
+
+void Customer::loadFromFile(std::vector<Customer>& customers, const std::string& filename) 
+{
+    ifstream inFile(filename);
+    int sum_record = 0;
+    if (inFile.is_open()) {
+        customers.clear(); // Clear existing data
+        int id, fine_due, record, numCars,carID;
+        string name,password;
+        vector<int> rented_cars;
+
+        while (inFile >> id >> name >> password >> fine_due >> record >> numCars) {
+
+            for(int i=0 ; i<numCars ; i++)
+            {
+                inFile >> carID;
+                rented_cars.push_back(carID);
+            }
+            sum_record += record;
+            customers.push_back(Customer(name,id,password,fine_due,record,rented_cars));
+        }
+        inFile.close();
+        if(!customers.size())
+            AVG_CUSTOMER_RECORD = sum_record / customers.size();
+        cout << "Records loaded from " << filename << endl;
+    } else {
+        cerr << "Unable to open file " << filename << endl;
+    }
+}
+
+void Employee :: loadFromFile(vector<Employee>& employees, const string& filename) {
+    int sum_record = 0;
+    ifstream inFile(filename);
+    if (inFile.is_open()) {
+        employees.clear(); // Clear existing data
+        int id, fine_due, record, numCars,carID;
+        string name,password;
+        vector<int> rented_cars;
+
+        while (inFile >> id >> name >> password >> fine_due >> record >> numCars) {
+
+            for(int i=0 ; i<numCars ; i++)
+            {
+                inFile >> carID;
+                rented_cars.push_back(carID);
+            }
+            sum_record += record;
+            employees.push_back(Employee(name,id,password,fine_due,record,rented_cars));
+        }
+        inFile.close();
+        if(!employees.size())
+            AVG_EMPLOYEE_RECORD = sum_record / employees.size();
+        cout << "Records loaded from " << filename << endl;
     } else {
         cerr << "Unable to open file " << filename << endl;
     }
