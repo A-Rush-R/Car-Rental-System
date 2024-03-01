@@ -41,3 +41,4 @@ g++ user.o dateTime.o main.o car.o utils.o -o my_program
 ## Pending 
 
 - Update functions for customer,manager and employee
+- Change model to maker and add model

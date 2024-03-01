@@ -168,12 +168,10 @@ Car* Car::searchCarById(std::vector<Car>& cars, int carId) {
 void Car :: showcars(vector<Car>& cars, int userID) {
     int count = 0;
     int discount = 0;
-    if(userID / MANAGER_BEGIN_ID == 1){//for manager
+    if(userID >= MANAGER_BEGIN_ID && userID < NUM_USERS * 5){//for manager
         if(!cars.size())
             cout << "No cars available" << endl;
         else {
-            if ( userID >= EMPLOYEE_BEGIN_ID && userID < MANAGER_BEGIN_ID)  
-                discount = DISCOUNT;
             cout << "-----------------------------------------------------------------------------------------" << endl;
             cout << left << setw(8) << "ID" << setw(15) << "Model" << setw(20) << "Condition" << setw(12) << "Status" << setw(7) << "Rent" << setw(8) << "OwnerID" << setw(11) << "Rent-Date" << setw(10) << "Due-Date" << endl;
             cout << "-----------------------------------------------------------------------------------------" << endl;
@@ -186,12 +184,16 @@ void Car :: showcars(vector<Car>& cars, int userID) {
     else
     {   for(auto& it : cars)
         {
+            if ( userID >= EMPLOYEE_BEGIN_ID && userID < MANAGER_BEGIN_ID)  
+                discount = DISCOUNT;
             if(it.ownerID == userID || it.ownerID == 0){
-                if (count == 0)
+                if (count == 0){
+                    cout << "-----------------------------------------------------------------------------------------" << endl;
                     cout << left << setw(8) << "ID" << setw(15) << "Model" << setw(20) << "Condition" << setw(12) << "Status" << setw(7) << "Rent" << setw(8) << "OwnerID" << setw(11) << "Rent-Date" << setw(10) << "Due-Date" << endl;
-
-                it.show();
-                count ++;
+                    cout << "-----------------------------------------------------------------------------------------" << endl;
+                }
+                it.show(discount);
+                count++;
             }
         }
         if (count == 0)
