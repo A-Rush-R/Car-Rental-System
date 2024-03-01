@@ -9,15 +9,7 @@
 #include "utils.h"
 #include<cassert>
 #include<iomanip>
-#define CAR_BEGIN_ID 100001
-#define MANAGER_BEGIN_ID 400001
-#define CUSTOMER_BEGIN_ID 200001
-#define EMPLOYEE_BEGIN_ID 300001
-#define HEAVY_DAMAGE 1
-#define LIGHT_DAMAGE 2
-#define MINOR_SCRATCHES 3
-#define FINE 4 
-#define DISCOUNT 0.15 //discount for the employees (between 0 and 1)
+#include "constants.h"
 using namespace std;
 
 Car::Car(std::string model, int id, int condition, int rent, DateTime rent_date, DateTime due_date, int ownerID)

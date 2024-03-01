@@ -2,22 +2,11 @@ using namespace std;
 #include "User.h"
 #include "utils.h"
 #include<iomanip>
-#define PENALTY_CUSTOMER_FRAC 2
-#define PENALTY_EMPLOYEE_FRAC 1.5
-#define CUSTOMER_BEGIN_ID 200001
-#define EMPLOYEE_BEGIN_ID 300001
-#define MANAGER_BEGIN_ID 400001
-#define REPAIR_REWARD 50
-#define NAME_CAP 20
-#define DISCOUNT 0.15
-#define HEAVY_DAMAGE 1
-#define LIGHT_DAMAGE 2
-#define MINOR_SCRATCHES 3
-#define FINE 4 
+#include "constants.h"
 
 
-int AVG_CUSTOMER_RECORD = 100;
-int AVG_EMPLOYEE_RECORD = 100;
+int AVG_CUSTOMER_RECORD = CUSTOMER_RECORD;
+int AVG_EMPLOYEE_RECORD = EMPLOYEE_RECORD; 
 
 User::User(std::string name, int id, std::string password)
     : name(name), id(id), password(password) {}
@@ -88,7 +77,7 @@ void Customer::rent_request(std::vector<Car>& cars)
         }
         while((DateTime(y_,m_,d_) - DateTime(y_,m_,d_) <= 0))
         {
-            
+
         }
         rented_cars.push_back(carID);
         carIt->rent_request(id,y_,m_,d_,y,m,d);
@@ -248,8 +237,29 @@ void Customer::updateCustomer(std::vector<Customer>& customers)
         return customer.id < id;
     });
     if (it != customers.end()) {
-        //modify here
-        // *it = updatedCustomer;
+        string name,password;
+        int k;
+
+        cout << "Choose the entry to modify" << endl;
+        cout << "1 - Name\n2 - Password" <<endl;
+        cin >> k;
+        switch(k)
+        {
+            case 1 :
+                cout << "Enter the new name : " ;
+                cin >> name;
+                it->name = name;
+                break;
+            case 2 :
+                cout << "Enter the new password : ";
+                cin >> password;
+                it->set_password(password);
+                break;
+            default :
+                cout << "Choose a valid option" << endl;
+                updateCustomer(customers);
+                break;
+        }
     } else {
         cout << "Customer with ID " << id << " not found." << endl;
     }
@@ -682,9 +692,29 @@ void Manager :: updateManager(vector<Manager>& Managers) {
         return Manager.id < id;
     });
 
+    int manID,k;
+    string name,password;
     if (it != Managers.end()) {
-        //modify the Manager here
-        // *it = updatedManager;
+        cout << "Choose the entry to modify" << endl;
+        cout << "1 - Name\n2 - Password" <<endl;
+        cin >> k;
+        switch(k)
+        {
+            case 1 :
+                cout << "Enter the new name : " ;
+                cin >> name;
+                it->name = name;
+                break;
+            case 2 :
+                cout << "Enter the new password : ";
+                cin >> password;
+                it->set_password(password);
+                break;
+            default :
+                cout << "Choose a valid option" << endl;
+                updateManager(Managers);
+                break;
+        }
     } else {
         cout << "Manager with ID " << id << " not found." << endl;
     }

@@ -7,14 +7,14 @@
 #include <algorithm>
 #include "Car.h"
 using namespace std;
-#define CUSTOMER_BEGIN_ID 200001
+#include "constants.h"
 
 class User {
 protected:
-    std::string password;
+    string password;
 
 public:
-    std::string name;
+    string name;
     int id;
 
     User(std::string name, int id, std::string password);
