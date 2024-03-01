@@ -49,5 +49,4 @@ g++ user.o dateTime.o main.o car.o utils.o -o my_program
 - The default cap on number of users (per type) is 100000, it can be changed in the [`constants.h`](/constants.h) file (it would require changing the id of all the objects in the database if done so)
 
 ## Pending 
-- Update functions for customer,manager and employee
 - Change model to maker and add model

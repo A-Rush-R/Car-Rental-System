@@ -64,7 +64,6 @@ void Customer::rent_request(std::vector<Car>& cars)
         cin >> date;
         if (!parse_date(date,&d,&m,&y))
         {
-            cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
             rent_request(cars);
         }
 
@@ -72,13 +71,18 @@ void Customer::rent_request(std::vector<Car>& cars)
         cin >> date;
         if (!parse_date(date,&d_,&m_,&y_))
         {
-            cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
             rent_request(cars);
         }
-        while((DateTime(y_,m_,d_) - DateTime(y_,m_,d_) <= 0))
+    while(DateTime(y_,m_,d_) - DateTime(y,m,d) >= 0)
+    {
+        cout << "Date of return must be at least one day from date of rental!" << endl;
+        cout << "Enter the date of return in DD-MM-YYYY format : ";
+        cin >> date;
+        if (!parse_date(date,&d_,&m_,&y_))
         {
-
+            rent_request(cars);
         }
+    }
         rented_cars.push_back(carID);
         carIt->rent_request(id,y_,m_,d_,y,m,d);
     }    
@@ -107,7 +111,6 @@ void Customer :: return_request(vector<Car>& cars)
     cin >> date;
     if (!parse_date(date,&d,&m,&y))
     {
-        cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
         begin_session(cars);
     }
     while(DateTime(y,m,d) - carIt->due_date <= 0)
@@ -117,7 +120,6 @@ void Customer :: return_request(vector<Car>& cars)
         cin >> date;
         if (!parse_date(date,&d,&m,&y))
         {
-            cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
             begin_session(cars);
         }
     }
@@ -241,7 +243,7 @@ void Customer::updateCustomer(std::vector<Customer>& customers)
         int k;
 
         cout << "Choose the entry to modify" << endl;
-        cout << "1 - Name\n2 - Password" <<endl;
+        cout << "1 - Name\n2 - Password\n3 - Fine due\n4 - Record" <<endl;
         cin >> k;
         switch(k)
         {
@@ -254,6 +256,14 @@ void Customer::updateCustomer(std::vector<Customer>& customers)
                 cout << "Enter the new password : ";
                 cin >> password;
                 it->set_password(password);
+                break;
+            case 3 :
+                cout << "Enter the new fine-due : ";
+                cin >> it->fine_due;
+                break;
+            case 4 :
+                cout << "Enter the new record : ";
+                cin >> it->record;
                 break;
             default :
                 cout << "Choose a valid option" << endl;
@@ -422,8 +432,37 @@ void Employee :: updateEmployee(vector<Employee>& Employees) {
     });
 
     if (it != Employees.end()) {
-        //modify the employee here
-        // *it = updatedEmployee;
+        string name,password;
+        int k;
+
+        cout << "Choose the entry to modify" << endl;
+        cout << "1 - Name\n2 - Password\n3 - Fine due\n4 - Record" <<endl;
+        cin >> k;
+        switch(k)
+        {
+            case 1 :
+                cout << "Enter the new name : " ;
+                cin >> name;
+                it->name = name;
+                break;
+            case 2 :
+                cout << "Enter the new password : ";
+                cin >> password;
+                it->set_password(password);
+                break;
+            case 3 :
+                cout << "Enter the new fine-due : ";
+                cin >> it->fine_due;
+                break;
+            case 4 :
+                cout << "Enter the new record : ";
+                cin >> it->record;
+                break;
+            default :
+                cout << "Choose a valid option" << endl;
+                updateEmployee(Employees);
+                break;
+        }
     } else {
         cout << "Employee with ID " << id << " not found." << endl;
     }
@@ -472,7 +511,7 @@ void Employee :: rent_request(vector<Car>& cars)
     auto carIt = Car :: searchCarById(cars,carID);
     if(carIt == nullptr)
     {
-        cout << "Car not found" << endl;
+        cout << "Car not found!" << endl;
         rent_request(cars);
         return;
     }
@@ -484,7 +523,6 @@ void Employee :: rent_request(vector<Car>& cars)
         cin >> date;
         if (!parse_date(date,&d,&m,&y))
         {
-            cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
             rent_request(cars);
         }
 
@@ -492,9 +530,9 @@ void Employee :: rent_request(vector<Car>& cars)
         cin >> date;
         if (!parse_date(date,&d_,&m_,&y_))
         {
-            cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
             rent_request(cars);
         }
+        if (DateTime(y_,m_,d_) - DateTime(y,m,d) <= 0)
         rented_cars.push_back(carID);
         carIt->rent_request(id,y,m,d,y_,m_,d_);
     }    
@@ -514,7 +552,7 @@ void Employee :: return_request(vector<Car>& cars)
     carIt = Car :: searchCarById(cars,carID);
     if(carIt == nullptr)
     {
-        cout << "Car is not Rented by the Employee" << endl;
+        cout << "Car is not Rented by the Customer" << endl;
         begin_session(cars);
         return;
     }
@@ -523,7 +561,6 @@ void Employee :: return_request(vector<Car>& cars)
     cin >> date;
     if (!parse_date(date,&d,&m,&y))
     {
-        cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
         begin_session(cars);
     }
     while(DateTime(y,m,d) - carIt->due_date <= 0)
@@ -533,7 +570,6 @@ void Employee :: return_request(vector<Car>& cars)
         cin >> date;
         if (!parse_date(date,&d,&m,&y))
         {
-            cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
             begin_session(cars);
         }
     }
@@ -541,20 +577,13 @@ void Employee :: return_request(vector<Car>& cars)
     cout << "Enter the condition of the Car\n1 - Heavy Damage\n2 - Light Damage\n3 - Minor Scratches\n4 - Fine" << endl;
     cin >> condition;
 
-    // Check if the input matches the pattern
-    if (!parse_date(date,&d,&m,&y))
-    {
-        cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
-        begin_session(cars);
-    }
-
     carIt->ownerID = 0;
     rented_cars.erase(remove(rented_cars.begin(), rented_cars.end(), carID), rented_cars.end());
     carIt->condition = condition;
 
     duration = carIt->due_date - carIt->rent_date;
     payable_rent = duration*carIt->rent;
-    cout << "Amount to be paid is : " << payable_rent * (1 - DISCOUNT) << endl;
+    cout << "Amount to be paid is : " << payable_rent << endl;
 
     late_duration = DateTime(y,m,d) - carIt->due_date;
     late_duration = late_duration > 0 ? late_duration : 0;

@@ -3,18 +3,28 @@
 #include "utils.h"
 using namespace std;
 
-bool parse_date(string date, int* d,int* m,int* y)
-{
+bool parse_date(string date, int* d, int* m, int* y) {
     regex pattern("\\b\\d{2}-\\d{2}-\\d{4}\\b");
     char delimiter;
     istringstream iss(date);
-    if(regex_match(date,pattern))
-    {
+    if (regex_match(date, pattern)) {
         iss >> *d >> delimiter >> *m >> delimiter >> *y;
-        return 1;
+        // Check if month is valid (between 1 and 12)
+        if (*m < 1 || *m > 12) {
+            cout << "Invalid month. Month must be between 1 and 12." << endl;
+            return false;
+        }
+        // Check if day is valid for the given month and year
+        int max_days = DateTime::daysInMonth(*y, *m);
+        if (*d < 1 || *d > max_days) {
+            cout << "Invalid day. Day must be between 1 and " << max_days << " for the given month and year." << endl;
+            return false;
+        }
+        return true;
+    } else {
+        cout << "Invalid date format. Please enter date in DD-MM-YYYY format." << endl;
+        return false;
     }
-    else 
-        return 0;
 }
 
 int operator-(const DateTime& date1, const DateTime& date2) {
