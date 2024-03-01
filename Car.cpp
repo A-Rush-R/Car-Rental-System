@@ -19,6 +19,11 @@ using namespace std;
 Car::Car(std::string model, int id, int condition, int rent, DateTime due_date, DateTime rent_date, int ownerID)
     : id(id), model(model), condition(condition), rent(rent), due_date(due_date), rent_date(rent_date), ownerID(ownerID) {}
 
+void Car :: repair()
+{
+    condition = FINE;
+}
+
 void Car :: show() const {
     string status = ownerID == 0 ? "Available" : "Rented";
     cout << "ID   Model    Condition    Status    OwnerID  Rent(per day)" << std::endl;

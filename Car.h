@@ -23,6 +23,7 @@ public:
     void show() const;
     int rent_request(int id, int y, int m, int d, int y_, int m_, int d_);
     DateTime show_due_date();
+    void repair();
     static void addCar(std::vector<Car>& cars);
     static void updateCar(std::vector<Car>& cars);
     static void deleteCar(std::vector<Car>& cars);

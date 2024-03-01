@@ -1,3 +1,4 @@
+using namespace std;
 #include "User.h"
 #include "utils.h"
 #define PENALTY_CUSTOMER_FRAC 2
@@ -5,7 +6,8 @@
 #define CUSTOMER_BEGIN_ID 200001
 #define EMPLOYEE_BEGIN_ID 300001
 #define MANAGER_BEGIN_ID 400001
-using namespace std;
+#define REPAIR_REWARD 50
+
 
 int AVG_CUSTOMER_RECORD = 100;
 int AVG_EMPLOYEE_RECORD = 100;
@@ -269,10 +271,14 @@ void Customer :: begin_session(std::vector<Car>& cars)
             break;
         case 4 :
             cout << "Current dues : " << show_due() << endl;
-            cout << "Do you want to pay dues ?\n1 - Yes\n2 - No" << endl;
-            cin >> k;
-            if(k == 1)
-                clear_due();
+            if(!show_due)
+                cout << "No dues" << endl;
+            else{
+                cout << "Do you want to pay dues ?\n1 - Yes\n2 - No" << endl;
+                cin >> k;
+                if(k == 1)
+                    clear_due();
+            }
             break;
         case 5 :
             return;
@@ -527,7 +533,7 @@ void Employee :: begin_session(vector<Car>& cars)
     cout << "Welcome " << name << endl;
     cout << "-----------------" << endl;
     int k;
-    cout << "Choose an option\n1 - Show Available Cars\n2 - Rent a Car\n3 - Return a Car\n4 - Exit" << endl;
+    cout << "Choose an option\n1 - Show Available Cars\n2 - Rent a Car\n3 - Return a Car\n4 - Clear Dues\n5 - Repair Car\n6 - Exit" << endl;
     cin >> k;
 
     char delimiter;
@@ -577,14 +583,34 @@ void Employee :: begin_session(vector<Car>& cars)
             late_duration = DateTime(y,m,d) - carIt->due_date;
             late_duration = late_duration > 0 ? late_duration : 0;
 
-            fine = carIt->rent*late_duration*PENALTY_CUSTOMER_FRAC + carIt->rent*(4 - condition) ; //fine for late return and damage(if any)
+            fine = carIt->rent*late_duration*PENALTY_EMPLOYEE_FRAC + carIt->rent*(4 - condition) ; //fine for late return and damage(if any)
             cout << "Fine charged for late return : " << carIt->rent*late_duration*PENALTY_EMPLOYEE_FRAC << endl;
             cout << "Fine charged for damages : " << carIt->rent*(4 - condition) << endl;
             cout << "Total fine : " << fine << endl;
-
+            update_record(late_duration,condition);
             fine_due += fine;
             break;
         case 4 :
+            cout << "Current dues : " << show_due() << endl;
+            if(!show_due)
+                cout << "No dues" << endl;
+            else{
+                cout << "Do you want to pay dues ?\n1 - Yes\n2 - No" << endl;
+                cin >> k;
+                if(k == 1)
+                    clear_due();
+            }
+            break;
+        case 5 :
+            cout << "Enter the ID of the car to be Repaired : ";
+            cin >> carID;
+
+            carIt = Car :: searchCarById(cars,carID);
+
+            record += REPAIR_REWARD * (4 - condition); 
+            carIt->repair();
+            break;
+        case 6 :
             return;
             break;
         default :

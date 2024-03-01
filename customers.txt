@@ -1,4 +1,4 @@
-200001 Arush_Upadhyaya bruh 0 100 0
+200001 Arush_Upadhyaya bruh 0 100 1 100003
 200002 Ritik_Shah vruh 0 100 0
 200003 Mudit_Jain rrr 0 100 0
 200004 Aditya_Prakash huihuihui 0 100 0
