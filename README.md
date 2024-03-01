@@ -3,7 +3,7 @@ This repository consists of the codebase for a Car Rental System for the OOPS As
 
 ## Contents
 This repository has the following contents &rarr;
-1. [`constants.h`](/constants.h) file which consists of all the constants used in the programme -- >
+1. [`constants.h`](/constants.h) file which consists of all the constants used in the programme &rarr;
     - Penalty fraction for the users for late return of cars
     - Beginning ID for the various types of users
     - Encoding of the conditions for the car (numerically closer conditions are more closer)
