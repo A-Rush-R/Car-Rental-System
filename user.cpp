@@ -310,6 +310,10 @@ void Employee :: set_password(string pass)
 {
     password = pass;
 }
+void Customer :: set_password(string pass)
+{
+    password = pass;
+}
 
 void Employee :: clear_due()
 {
