@@ -45,7 +45,11 @@ void Customer::rent_request(std::vector<Car>& cars)
     int d_,y_,m_;
 
     cout << "Enter the id of the car to be rented : " ;
-    cin >> carID;
+    if(!(cin >> carID)){
+        non_int();
+        exit();
+        return;
+    }
     auto carIt = Car :: searchCarById(cars,carID);
     if(carIt == nullptr)
     {
@@ -62,6 +66,7 @@ void Customer::rent_request(std::vector<Car>& cars)
         if (!parse_date(date,&d,&m,&y))
         {
             rent_request(cars);
+            return;
         }
 
         cout << "Enter the date of return in DD-MM-YYYY format : ";
@@ -69,6 +74,7 @@ void Customer::rent_request(std::vector<Car>& cars)
         if (!parse_date(date,&d_,&m_,&y_))
         {
             rent_request(cars);
+            return;
         }
     while(DateTime(y_,m_,d_) - DateTime(y,m,d) <= 0)
     {
@@ -78,6 +84,7 @@ void Customer::rent_request(std::vector<Car>& cars)
         if (!parse_date(date,&d_,&m_,&y_))
         {
             rent_request(cars);
+            return;
         }
     }
         record -= THRESHOLD_RECORD;
@@ -96,7 +103,11 @@ void Customer :: return_request(vector<Car>& cars)
     int fine,duration,payable_rent,late_duration;
 
     cout << "Enter the id of the car to be returned : " ;
-    cin >> carID;
+    if(!(cin >> carID)){
+        non_int();
+        exit();
+        return;
+    }
     carIt = Car :: searchCarById(cars,carID);
     if(carIt == nullptr)
     {
@@ -112,7 +123,7 @@ void Customer :: return_request(vector<Car>& cars)
         begin_session(cars);
         return;
     }
-    while(DateTime(y,m,d) - carIt->due_date <= 0)
+    while(DateTime(y,m,d) - carIt->rent_date <= 0)
     {
         cout << "Date of return must be at least one day from date of rental!" << endl;
         cout << "Enter the date of return in DD-MM-YYYY format : ";
@@ -125,7 +136,11 @@ void Customer :: return_request(vector<Car>& cars)
     }
 
     cout << "Enter the condition of the Car\n1 - Heavy Damage\n2 - Light Damage\n3 - Minor Scratches\n4 - Fine" << endl;
-    cin >> condition;
+    if(!(cin >> condition)){
+        non_int();
+        exit();
+        return;
+    }
 
     carIt->ownerID = 0;
     rented_cars.erase(remove(rented_cars.begin(), rented_cars.end(), carID), rented_cars.end());
@@ -229,14 +244,18 @@ Customer* Customer::login(std::vector<Customer>& customers)  {
 void Customer :: update_record(int late_duration,int delta)
 {
     record = record + RETURN_REWARD - DAMAGE_PENALTY *delta - LATE_RECORD_CHARGE*late_duration;
-    cout << "record is " << record << endl;
+    // cout << "record is " << record << endl;
 }
 
 void Customer::updateCustomer(std::vector<Customer>& customers) 
 {
     int id;
     cout << "Enter the id of the Customer to be modified : " ;
-    cin >> id;
+    if(!(cin >> id)){
+        non_int();
+        exit();
+        return;
+    }
 
     auto it = lower_bound(customers.begin(), customers.end(), id, [](const Customer& customer, int id) {
         return customer.id < id;
@@ -247,7 +266,11 @@ void Customer::updateCustomer(std::vector<Customer>& customers)
 
         cout << "Choose the entry to modify" << endl;
         cout << "1 - Name\n2 - Password\n3 - Fine due\n4 - Record" <<endl;
-        cin >> k;
+        if(!(cin >> k)){
+            non_int();
+            exit();
+            return;
+        }
         switch(k)
         {
             case 1 :
@@ -262,11 +285,19 @@ void Customer::updateCustomer(std::vector<Customer>& customers)
                 break;
             case 3 :
                 cout << "Enter the new fine-due : ";
-                cin >> it->fine_due;
+                if(!(cin >> it->fine_due)){
+                    non_int();
+                    exit();
+                    return;
+                }
                 break;
             case 4 :
                 cout << "Enter the new record : ";
-                cin >> it->record;
+                if(!(cin >> it->record)){
+                    non_int();
+                    exit();
+                    return;
+                }
                 break;
             default :
                 cout << "Choose a valid option" << endl;
@@ -282,7 +313,11 @@ void Customer::deleteCustomer(std::vector<Customer>& customers)
 {
     int id;
     cout << "Enter the id of the Customer to be deleted : " ;
-    cin >> id;
+    if(!(cin >> id)){
+        non_int();
+        exit();
+        return;
+    }
     auto it = lower_bound(customers.begin(), customers.end(), id, [](const Customer& customer, int id) {
         return customer.id < id;
     });
@@ -427,7 +462,11 @@ void Employee :: updateEmployee(vector<Employee>& Employees) {
     
     int id;
     cout << "Enter the id of the Customer to be modified : " ;
-    cin >> id;
+    if(!(cin >> id)){
+        non_int();
+        exit();
+        return;
+    }
 
     auto it = lower_bound(Employees.begin(), Employees.end(), id, [](const Employee& Employee, int id) {
         return Employee.id < id;
@@ -439,7 +478,11 @@ void Employee :: updateEmployee(vector<Employee>& Employees) {
 
         cout << "Choose the entry to modify" << endl;
         cout << "1 - Name\n2 - Password\n3 - Fine due\n4 - Record" <<endl;
-        cin >> k;
+        if(!(cin >> k)){
+            non_int();
+            exit();
+            return;
+        }
         switch(k)
         {
             case 1 :
@@ -454,11 +497,19 @@ void Employee :: updateEmployee(vector<Employee>& Employees) {
                 break;
             case 3 :
                 cout << "Enter the new fine-due : ";
-                cin >> it->fine_due;
+                if(!(cin >> it->fine_due)){
+                    non_int();
+                    exit();
+                    return;
+                }
                 break;
             case 4 :
                 cout << "Enter the new record : ";
-                cin >> it->record;
+                if(!(cin >> it->record)){
+                    non_int();
+                    exit();
+                    return;
+                }
                 break;
             default :
                 cout << "Choose a valid option" << endl;
@@ -475,7 +526,11 @@ void Employee :: deleteEmployee(vector<Employee>& Employees) {
 
     int id;
     cout << "Enter the id of the Customer to be deleted : " ;
-    cin >> id;
+    if(!(cin >> id)){
+        non_int();
+        exit();
+        return;
+    }
 
     auto it = lower_bound(Employees.begin(), Employees.end(), id, [](const Employee& Employee, int id) {
         return Employee.id < id;
@@ -499,21 +554,21 @@ void Employee :: show_employees(vector<Employee>& Employees)
 
 void Employee :: rent_request(vector<Car>& cars)
 {
-    if( record < THRESHOLD_RECORD){
-        cout << "Not eligible to rent a car based on current record";
-        return;
-    }
     int carID;
     string date;
     int d,m,y;
     int d_,y_,m_;
 
     cout << "Enter the id of the car to be rented : " ;
-    cin >> carID;
+    if(!(cin >> carID)){
+        non_int();
+        exit();
+        return;
+    }
     auto carIt = Car :: searchCarById(cars,carID);
     if(carIt == nullptr)
     {
-        cout << "Car not found!" << endl;
+        cout << "Car not found" << endl;
         rent_request(cars);
         return;
     }
@@ -526,6 +581,7 @@ void Employee :: rent_request(vector<Car>& cars)
         if (!parse_date(date,&d,&m,&y))
         {
             rent_request(cars);
+            return;
         }
 
         cout << "Enter the date of return in DD-MM-YYYY format : ";
@@ -533,10 +589,22 @@ void Employee :: rent_request(vector<Car>& cars)
         if (!parse_date(date,&d_,&m_,&y_))
         {
             rent_request(cars);
+            return;
         }
-        if (DateTime(y_,m_,d_) - DateTime(y,m,d) <= 0)
+    while(DateTime(y_,m_,d_) - DateTime(y,m,d) <= 0)
+    {
+        cout << "Date of return must be at least one day from date of rental!" << endl;
+        cout << "Enter the date of return in DD-MM-YYYY format : ";
+        cin >> date;
+        if (!parse_date(date,&d_,&m_,&y_))
+        {
+            rent_request(cars);
+            return;
+        }
+    }
+        record -= THRESHOLD_RECORD;
         rented_cars.push_back(carID);
-        carIt->rent_request(id,y,m,d,y_,m_,d_);
+        carIt->rent_request(id,y_,m_,d_,y,m,d);
     }    
 }
 
@@ -550,7 +618,11 @@ void Employee :: return_request(vector<Car>& cars)
     int fine,duration,payable_rent,late_duration;
 
     cout << "Enter the id of the car to be returned : " ;
-    cin >> carID;
+    if(!(cin >> carID)){
+        non_int();
+        exit();
+        return;
+    }
     carIt = Car :: searchCarById(cars,carID);
     if(carIt == nullptr)
     {
@@ -579,7 +651,11 @@ void Employee :: return_request(vector<Car>& cars)
     }
 
     cout << "Enter the condition of the Car\n1 - Heavy Damage\n2 - Light Damage\n3 - Minor Scratches\n4 - Fine" << endl;
-    cin >> condition;
+    if(!(cin >> condition)){
+        non_int();
+        exit();
+        return;
+    }
 
     carIt->ownerID = 0;
     rented_cars.erase(remove(rented_cars.begin(), rented_cars.end(), carID), rented_cars.end());
@@ -605,7 +681,7 @@ void Employee :: return_request(vector<Car>& cars)
 void Employee :: update_record(int late_duration,int delta)
 {
     record = record + RETURN_REWARD - DAMAGE_PENALTY* delta- LATE_RECORD_CHARGE * late_duration;
-    cout << "record is " << record << endl;
+    // cout << "record is " << record << endl;
 }
 
 int Employee :: show_due()
@@ -622,7 +698,11 @@ void Manager :: show_records(vector<Customer>& customers, vector<Employee>& empl
 {
     int k;
     cout << "Which Records are to be shown?\n1 - Cars\n2 - Customers\n3 - Employees\n4 - Exit" << endl;
-    cin >> k;
+    if(!(cin >> k)){
+        non_int();
+        exit();
+        return;
+    }
 
     switch(k)
     {
@@ -636,6 +716,7 @@ void Manager :: show_records(vector<Customer>& customers, vector<Employee>& empl
             Employee :: show_employees(employees);
             break;
         case 4 :
+            exit();
             return;
         default : 
             cout << "Invalid Input" << endl;
@@ -726,7 +807,11 @@ void Manager :: updateManager(vector<Manager>& Managers) {
     
     int id;
     cout << "Enter the id of the Customer to be modified : " ;
-    cin >> id;
+    if(!(cin >> id)){
+        non_int();
+        exit();
+        return;
+    }
 
     auto it = lower_bound(Managers.begin(), Managers.end(), id, [](const Manager& Manager, int id) {
         return Manager.id < id;
@@ -737,7 +822,11 @@ void Manager :: updateManager(vector<Manager>& Managers) {
     if (it != Managers.end()) {
         cout << "Choose the entry to modify" << endl;
         cout << "1 - Name\n2 - Password" <<endl;
-        cin >> k;
+        if(!(cin >> k)){
+            non_int();
+            exit();
+            return;
+        }
         switch(k)
         {
             case 1 :
@@ -765,7 +854,11 @@ void Manager :: deleteManager(vector<Manager>& Managers) {
 
     int id;
     cout << "Enter the id of the Customer to be deleted : " ;
-    cin >> id;
+    if(!(cin >> id)){
+        non_int();
+        exit();
+        return;
+    }
 
     auto it = lower_bound(Managers.begin(), Managers.end(), id, [](const Manager& Manager, int id) {
         return Manager.id < id;
@@ -789,13 +882,21 @@ void Manager :: modify_records(vector<Customer>& customers, vector<Car>& cars, v
     cout << "Which database is to be modified?\n1 - Customers\n2 - Employees\n3 - Cars" << endl;
     int k,j;
 
-    cin >> k;
+    if(!(cin >> k)){
+        non_int();
+        exit();
+        return;
+    }
 
     string name,password;
     switch(k){
         case 1 : 
             cout << "Choose the operation you want to perform\n1 - Add\n2 - Update\n3 - Delete" << endl;
-            cin >> j;
+            if(!(cin >> j)){
+                non_int();
+                exit();
+                return;
+            }
 
             switch (j)
             {
@@ -817,7 +918,11 @@ void Manager :: modify_records(vector<Customer>& customers, vector<Car>& cars, v
             break;
         case 2 : 
             cout << "Choose the operation you want to perform\n1 - Add\n2 - Update\n3 - Delete" << endl;
-            cin >> j;
+            if(!(cin >> j)){
+                non_int();
+                exit();
+                return;
+            }
 
             switch (j)
             {
@@ -839,7 +944,11 @@ void Manager :: modify_records(vector<Customer>& customers, vector<Car>& cars, v
             break ;
         case 3 : 
             cout << "Choose the operation you want to perform\n1 - Add\n2 - Update\n3 - Delete" << endl;
-            cin >> j;
+            if(!(cin >> j)){
+                non_int();
+                exit();
+                return;
+            }
 
             switch (j)
             {
@@ -877,7 +986,11 @@ void Customer :: begin_session(vector<Car>& cars)
     cout << "-----------------" << endl;
     int k;
     cout << "Choose an option\n1 - Show Available Cars\n2 - Rent a Car\n3 - Return a Car\n4 - Clear Dues\n5 - Exit" << endl;
-    cin >> k;
+    if(!(cin >> k)){
+        non_int();
+        exit();
+        return;
+    }
 
     char delimiter;
 
@@ -896,14 +1009,17 @@ void Customer :: begin_session(vector<Car>& cars)
             Car :: showcars(cars,id);
             break;
         case 2 :
-            if(record > THRESHOLD_RECORD)
+            if(record >= THRESHOLD_RECORD)
                 rent_request(cars);
             else 
-                cout << "Not eligible for renting a car currently" << endl;
+                cout << "Currently not eligible for renting a car" << endl;
             break;
 
         case 3 :
-            return_request(cars);
+            if(!rented_cars.empty())
+                return_request(cars);
+            else 
+                cout << "No cars rented currently" << endl;
             break;
         case 4 :
             cout << "Current dues : " << show_due() << endl;
@@ -911,12 +1027,17 @@ void Customer :: begin_session(vector<Car>& cars)
                 cout << "No dues" << endl;
             else{
                 cout << "Do you want to pay dues ?\n1 - Yes\n2 - No" << endl;
-                cin >> k;
+                if(!(cin >> k)){
+                    non_int();
+                    exit();
+                    return;
+                }
                 if(k == 1)
                     clear_due();
             }
             break;
         case 5 :
+            exit();
             return;
             break;
         default :
@@ -932,7 +1053,11 @@ void Employee :: begin_session(vector<Car>& cars)
     cout << "-----------------" << endl;
     int k;
     cout << "Choose an option\n1 - Show Available Cars\n2 - Rent a Car\n3 - Return a Car\n4 - Clear Dues\n5 - Repair Car\n6 - Exit" << endl;
-    cin >> k;
+    if(!(cin >> k)){
+        non_int();
+        exit();
+        return;
+    }
 
     char delimiter;
 
@@ -951,14 +1076,17 @@ void Employee :: begin_session(vector<Car>& cars)
             Car :: showcars(cars,id);
             break;
         case 2 :
-            rent_request(cars);
+            if( record < THRESHOLD_RECORD)
+                cout << "Currently not eligible to rent a car" << endl;
+            else 
+                rent_request(cars);
             break;
 
         case 3 :
-            if( record > THRESHOLD_RECORD)
-                return_request(cars);
+            if(rented_cars.empty())
+                cout << "No cars rented currently" << endl;
             else 
-                cout << "Not eligible for renting a car currently" << endl;
+                return_request(cars);
             break;
         case 4 :
             cout << "Current dues : " << show_due() << endl;
@@ -966,14 +1094,22 @@ void Employee :: begin_session(vector<Car>& cars)
                 cout << "No dues" << endl;
             else{
                 cout << "Do you want to pay dues ?\n1 - Yes\n2 - No" << endl;
-                cin >> k;
+                if(!(cin >> k)){
+                    non_int();
+                    exit();
+                    return;
+                }
                 if(k == 1)
                     clear_due();
             }
             break;
         case 5 :
             cout << "Enter the ID of the car to be Repaired : ";
-            cin >> carID;
+            if(!(cin >> carID)){
+                non_int();
+                exit();
+                return;
+            }
 
             carIt = Car :: searchCarById(cars,carID);
             if(carIt == nullptr)
@@ -986,6 +1122,7 @@ void Employee :: begin_session(vector<Car>& cars)
             }
             break;
         case 6 :
+            exit();
             return;
             break;
         default :
@@ -1001,7 +1138,11 @@ void Manager :: begin_session(vector<Customer>& customers, vector<Car>& cars, ve
     cout << "-----------------" << endl;
     cout << "Choose an option\n1 - View the Records\n2 - Modify the Records\n3 - Exit" << endl;
     int k;
-    cin >> k;
+    if(!(cin >> k)){
+        non_int();
+        exit();
+        return;
+    }
 
     switch(k)
     {
@@ -1012,6 +1153,7 @@ void Manager :: begin_session(vector<Customer>& customers, vector<Car>& cars, ve
             modify_records(customers,cars,employees);
             break;
         case 3:
+            exit();
             return;
         default:
             cout << "Invalid Option" << endl;
@@ -1087,7 +1229,7 @@ void Customer::loadFromFile(std::vector<Customer>& customers, const std::string&
         vector<int> rented_cars;
 
         while (inFile >> id >> name >> password >> fine_due >> record >> numCars) {
-
+            rented_cars.clear();
             for(int i=0 ; i<numCars ; i++)
             {
                 inFile >> carID;
@@ -1115,7 +1257,7 @@ void Employee ::loadFromFile(std::vector<Employee>& employess, const std::string
         vector<int> rented_cars;
 
         while (inFile >> id >> name >> password >> fine_due >> record >> numCars) {
-
+            rented_cars.clear();
             for(int i=0 ; i<numCars ; i++)
             {
                 inFile >> carID;

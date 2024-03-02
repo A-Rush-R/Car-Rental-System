@@ -88,14 +88,22 @@ void Car::updateCar(std::vector<Car>& cars) {
     if (it != cars.end()) {
         
         cout << "Choose the entry to modify\n1 - Condition\n2 - Rent-Date\n3 - Due-Date\n4 - Rent" << endl;
-        cin >> k;
+        if(!(cin >> k)){
+            non_int();
+            exit();
+            return;
+        }
         string temp;
         int d,m,y;
         regex pattern("\\b\\d{2}-\\d{2}-\\d{4}\\b");
         switch(k){
             case 1:
                 cout << "Choose an option\n1 - Heavy Damaged\n2 - Light Damage\n3 - Minor Scratches\n4 - Fine" << endl;
-                cin >> k;
+                if(!(cin >> k)){
+                    non_int();
+                    exit();
+                    return;
+                }
                 it->condition = k;                
                 break;
             case 2:

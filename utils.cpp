@@ -40,3 +40,18 @@ int operator-(const DateTime& date1, const DateTime& date2) {
     days2 += date2.getDay();
     return days1 - days2;
 }
+
+void exit()
+{
+    cout << "Exiting..." << endl;
+}
+
+void non_int()
+{
+    cout << "Please enter an integer" << endl;
+}
+
+void invalid_option()
+{
+    cout << "Invalid Option" << endl;
+}
