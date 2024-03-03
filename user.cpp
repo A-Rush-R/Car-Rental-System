@@ -463,7 +463,7 @@ Employee* Employee :: login(vector<Employee>& employees) {
 void Employee :: updateEmployee(vector<Employee>& Employees) {
     
     int id;
-    cout << "Enter the id of the Customer to be modified : " ;
+    cout << "Enter the id of the Employee to be modified : " ;
     if(!(cin >> id)){
         non_int();
         exit();
@@ -527,7 +527,7 @@ void Employee :: updateEmployee(vector<Employee>& Employees) {
 void Employee :: deleteEmployee(vector<Employee>& Employees) {
 
     int id;
-    cout << "Enter the id of the Customer to be deleted : " ;
+    cout << "Enter the id of the Employee to be deleted : " ;
     if(!(cin >> id)){
         non_int();
         exit();
@@ -819,7 +819,7 @@ Manager* Manager :: login(vector<Manager>& Managers) {
 void Manager :: updateManager(vector<Manager>& Managers) {
     
     int id;
-    cout << "Enter the id of the Customer to be modified : " ;
+    cout << "Enter the id of the Manager to be modified : " ;
     if(!(cin >> id)){
         non_int();
         exit();
@@ -866,7 +866,7 @@ void Manager :: updateManager(vector<Manager>& Managers) {
 void Manager :: deleteManager(vector<Manager>& Managers) {
 
     int id;
-    cout << "Enter the id of the Customer to be deleted : " ;
+    cout << "Enter the id of the Manager to be deleted : " ;
     if(!(cin >> id)){
         non_int();
         exit();
