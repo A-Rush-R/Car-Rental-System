@@ -61,15 +61,28 @@ DateTime Car::show_due_date() {
 
 // Function to add a new car to the database
 void Car::addCar(std::vector<Car>& cars) {
-    int id, condition;
+    int id, rent, condition;
     std::string model;
     std::cout << "Enter the model of the Car to be Added : ";
     std::cin >> model;
+    cout << "Enter the rent of the car : ";
+    if(!(cin >> rent)){
+        non_int();
+        exit();
+        return;
+    }
+    cout << "Enter the condition of the car\n"<< HEAVY_DAMAGE <<" - Heavy Damaged\n"<< LIGHT_DAMAGE <<" - Light Damage\n"<< MINOR_SCRATCHES  <<" - Minor Scratches\n"<<FINE <<" - Fine" << endl;
+    if(!(cin >> condition)){
+        non_int();
+        exit();
+        return;
+    }
+
 
     if (!cars.empty())
-        cars.push_back(Car(model, id = cars.back().id + 1));
+        cars.push_back(Car(model, id = cars.back().id + 1,condition,rent));
     else
-        cars.push_back(Car(model, id = CAR_BEGIN_ID));
+        cars.push_back(Car(model, id = CAR_BEGIN_ID,condition,rent));
 
     std::cout << "The ID of the added car is " << id << std::endl;
 }
@@ -98,7 +111,7 @@ void Car::updateCar(std::vector<Car>& cars) {
         regex pattern("\\b\\d{2}-\\d{2}-\\d{4}\\b");
         switch(k){
             case 1:
-                cout << "Choose an option\n1 - Heavy Damaged\n2 - Light Damage\n3 - Minor Scratches\n4 - Fine" << endl;
+                cout << "Choose an option\n"<< HEAVY_DAMAGE <<" - Heavy Damaged\n"<< LIGHT_DAMAGE <<" - Light Damage\n"<< MINOR_SCRATCHES  <<" - Minor Scratches\n"<<FINE <<" - Fine" << endl;
                 if(!(cin >> k)){
                     non_int();
                     exit();

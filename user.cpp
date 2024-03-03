@@ -934,7 +934,7 @@ void Manager :: search_records(vector<Customer>& customers, vector<Car>& cars, v
 
 void Manager :: modify_records(vector<Customer>& customers, vector<Car>& cars, vector<Employee>& employees)
 {
-    cout << "Which database is to be modified?\n1 - Customers\n2 - Employees\n3 - Cars" << endl;
+    cout << "Which database is to be modified?\n1 - Customers\n2 - Employees\n3 - Cars\n4 - Exit" << endl;
     int k,j;
 
     if(!(cin >> k)){
@@ -964,11 +964,13 @@ void Manager :: modify_records(vector<Customer>& customers, vector<Car>& cars, v
             case 3:
                 Customer :: deleteCustomer(customers);
                 break;
+            case 4 :
+                begin_session(customers,cars,employees);
+                return;
             default:
                 cout << "Incorrect Option !" << endl;
                 modify_records(customers,cars,employees);
-
-                break;
+                return;
             }
             break;
         case 2 : 
