@@ -1191,7 +1191,7 @@ void Manager :: begin_session(vector<Customer>& customers, vector<Car>& cars, ve
     cout << "-----------------" << endl;
     cout << "Welcome " << name << endl;
     cout << "-----------------" << endl;
-    cout << "Choose an option\n1 - View the Records\n2 - Modify the Records\n4 - Search the Records\n3 - Exit" << endl;
+    cout << "Choose an option\n1 - View the Records\n2 - Modify the Records\n3 - Search the Records\n4 - Exit" << endl;
     int k;
     if(!(cin >> k)){
         non_int();
