@@ -52,6 +52,4 @@ g++ user.o dateTime.o main.o car.o utils.o -o my_program
 - At the time of return it is assumed that the condition of the car returned will be same or worse than the condition at the time of renting
 
 ## Pending 
-- introduce make
-- debugg remaining employee and security check
-- manager security check
+- one final security check
