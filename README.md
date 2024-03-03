@@ -4,12 +4,14 @@ This repository consists of the codebase for a Car Rental System for the OOPS As
 ## Contents
 This repository has the following contents &rarr;
 1. [`constants.h`](/constants.h) file which consists of all the constants used in the programme &rarr;
-    - Penalty fraction for the users for late return of cars
+    - Factor of the rent need to be paid as fine per day for returning the car late
     - Beginning ID for the various types of users
+    - Cap on the number of users
     - Encoding of the conditions for the car (numerically closer conditions are more closer)
     - Repair reward, given to the employee for repairing a car (one unit per change in condition)
     - Discount for the employees 
     - Defualt values for record (when average is not available)
+    - Penalty for damaging the car
 2. [`car.h`](/car.h) and [`car.cpp`](/car.cpp) files containing the car class with attributes and operations
 3. [`user.h`](/user.h) and [`user.cpp`](/user.cpp) files containing the user superclass, customer, employee and manager class with attributes and operations
 4. [`dateTime.h`](/dateTime.h) and [`dateTime.cpp`](/dateTime.cpp) files containing the dateTime class with attributes and operations
@@ -39,7 +41,6 @@ g++ user.o dateTime.o main.o car.o utils.o -o my_program
 ## Details
 - Employees get a discount of 15% for renting cars
 - Employees have the option of repairing a car, which rewards them by increasing their record
-
 - An unexpected input will cause the program to terminate, but databases will be saved
 
 ## Assumptions 
@@ -51,5 +52,3 @@ g++ user.o dateTime.o main.o car.o utils.o -o my_program
 - The default cap on number of users (per type) is 100000, it can be changed in the [`constants.h`](/constants.h) file (it would require changing the id of all the objects in the database if done so)
 - At the time of return it is assumed that the condition of the car returned will be same or worse than the condition at the time of renting
 
-## Pending 
-- one final security check
