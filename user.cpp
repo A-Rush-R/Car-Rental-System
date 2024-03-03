@@ -633,7 +633,13 @@ void Employee :: return_request(vector<Car>& cars)
     carIt = Car :: searchCarById(cars,carID);
     if(carIt == nullptr)
     {
-        cout << "Car is not Rented by the Employee" << endl;
+        cout << "Car not found" << endl;
+        begin_session(cars);
+        return;
+    }
+    else if(carIt->ownerID != id)
+    {
+        cout << "Car is not rented by the Employee." << endl;
         begin_session(cars);
         return;
     }
@@ -1186,6 +1192,7 @@ void Employee :: begin_session(vector<Car>& cars)
             else{
                 record = record + REPAIR_REWARD * (FINE - carIt->condition); 
                 carIt->repair();
+                cout << "Car with id " << carIt->id << " repaired successfully." << endl;
             }
             break;
         case 6 :
