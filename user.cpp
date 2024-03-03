@@ -206,9 +206,7 @@ void Customer::addCustomer(std::vector<Customer>& customers)
         id = customers.back().id + 1;
     else
         id = CUSTOMER_BEGIN_ID;
-    // cout << "DEBUGGING" << endl;
-
-    cout << "ID of the new Customer is : " << id << endl;
+    cout << "Customer with ID " << id << " added successfully." << endl;
     customers.push_back(Customer(name,id,password,0,AVG_CUSTOMER_RECORD));
 }
 
@@ -256,7 +254,6 @@ void Customer::updateCustomer(std::vector<Customer>& customers)
         exit();
         return;
     }
-
     auto it = lower_bound(customers.begin(), customers.end(), id, [](const Customer& customer, int id) {
         return customer.id < id;
     });
@@ -322,10 +319,15 @@ void Customer::deleteCustomer(std::vector<Customer>& customers)
         return customer.id < id;
     });
     // auto it = searchCustomerById(customers,id);
-    if (it != customers.end()) {
-        customers.erase(it);
-    } else {
+    if (it == customers.end()) {
         cout << "Customer with ID " << id << " not found." << endl;
+    } 
+    else if(it->rented_cars.size() != 0){
+        cout << "Customer with ID " << id << " has rented a car and cannot be deleted." << endl;
+    }
+    else {
+        customers.erase(it);
+        cout << "Customer with ID " << id << " deleted." << endl;
     }
 }
 
@@ -410,7 +412,7 @@ void Employee :: addEmployee(vector<Employee>& employees) {
         id = employees.back().id + 1;
     else 
         id = EMPLOYEE_BEGIN_ID;
-    cout << "ID of the new Employee is : " << id << endl;
+    cout << "Employee with ID " << id << " added successfully." << endl;
     employees.push_back(Employee(name,id,password));
 }
 
@@ -535,10 +537,15 @@ void Employee :: deleteEmployee(vector<Employee>& Employees) {
     auto it = lower_bound(Employees.begin(), Employees.end(), id, [](const Employee& Employee, int id) {
         return Employee.id < id;
     });
-    if (it != Employees.end()) {
-        Employees.erase(it);
-    } else {
+    if (it == Employees.end()) {
         cout << "Employee with ID " << id << " not found." << endl;
+    } 
+    else if (it->rented_cars.size() != 0){
+        cout << "Employee with ID " << id << " has rented a car and connot be deleted." << endl;
+    }
+    else {
+        Employees.erase(it);
+        cout << "Employee with ID " << id << " deleted." << endl;
     }
 }
 
