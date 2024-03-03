@@ -877,6 +877,61 @@ void Manager :: show_managers(vector<Manager>& Managers)
         it.show();
 }
 
+void Manager :: search_records(vector<Customer>& customers, vector<Car>& cars, vector<Employee>& employees)
+{
+    int k;
+    int id;
+
+    cout << "What do you want to search\n1 - Car\n2 - Customer\n3 - Employee\n4 - Exit" << endl ;
+    if(!(cin >> k)){
+        non_int();
+        exit();
+        return;
+    }
+    switch(k)
+    {
+        case 1: 
+            cout << "Enter the id of car to be searched : " ;
+            cin >> id;
+            if(Car :: searchCarById(cars,id) == nullptr)
+                cout << "Car not found!" << endl;
+            else{
+                cout << "-----------------------------------------------------------------------------------------" << endl;
+                cout << left << setw(8) << "ID" << setw(15) << "Model" << setw(20) << "Condition" << setw(12) << "Status" << setw(7) << "Rent" << setw(8) << "OwnerID" << setw(11) << "Rent-Date" << setw(10) << "Due-Date" << endl;
+                cout << "-----------------------------------------------------------------------------------------" << endl;
+                Car :: searchCarById(cars,id)->show(0);
+            }
+            break;
+        case 2:
+            cout << "Enter the id of the customer to be searched : ";
+            cin >> id;
+            if(Customer :: searchCustomerById(customers,id) == nullptr)
+                cout << "Customer not found!" << endl;
+            else{
+                cout << "-------------------------------------------------------------------------------------------" << endl;
+                cout << left << setw(8) << "ID" << setw(NAME_CAP) << "Name" << setw(10) << "Fine" << setw(18) << "Customer-Record" << setw(8) << "Rented-Cars" << endl;
+                cout << "-------------------------------------------------------------------------------------------" << endl;
+                Customer :: searchCustomerById(customers,id)->show();
+            }
+            break;
+        case 3:
+            cout << "Enter the id of the employee to be searched : ";
+            cin >> id;
+            if(Employee :: searchEmployeeById(employees,id) == nullptr)
+                cout << "Employee not found!" << endl;
+            else{
+                cout << "-------------------------------------------------------------------------------------------" << endl;
+                cout << left << setw(8) << "ID" << setw(NAME_CAP) << "Name" << setw(10) << "Fine" << setw(18) << "Employee-Record" << setw(8) << "Rented-Cars" << endl;
+                cout << "-------------------------------------------------------------------------------------------" << endl;
+                Employee :: searchEmployeeById(employees,id)->show();
+            }
+            break;
+        case 4 :
+            return;
+    }
+    search_records(customers,cars,employees);
+}
+
 void Manager :: modify_records(vector<Customer>& customers, vector<Car>& cars, vector<Employee>& employees)
 {
     cout << "Which database is to be modified?\n1 - Customers\n2 - Employees\n3 - Cars" << endl;
@@ -1136,7 +1191,7 @@ void Manager :: begin_session(vector<Customer>& customers, vector<Car>& cars, ve
     cout << "-----------------" << endl;
     cout << "Welcome " << name << endl;
     cout << "-----------------" << endl;
-    cout << "Choose an option\n1 - View the Records\n2 - Modify the Records\n3 - Exit" << endl;
+    cout << "Choose an option\n1 - View the Records\n2 - Modify the Records\n4 - Search the Records\n3 - Exit" << endl;
     int k;
     if(!(cin >> k)){
         non_int();
@@ -1153,6 +1208,9 @@ void Manager :: begin_session(vector<Customer>& customers, vector<Car>& cars, ve
             modify_records(customers,cars,employees);
             break;
         case 3:
+            search_records(customers,cars,employees);
+            break;
+        case 4:
             exit();
             return;
         default:

@@ -78,6 +78,7 @@ class Manager : public User
         void set_password( string pass);
         Manager(const string& name, int id, const string& password);
         void show_records(vector<Customer>& customers, vector<Employee>& employees, vector<Car>& cars);
+        void Manager :: search_records(vector<Customer>& customers, vector<Car>& cars, vector<Employee>& employees);
         static void addManager(vector<Manager>& Managers);
         static Manager* searchManagerById(vector<Manager>& Managers, int ManagerId);
         static Manager* login(vector<Manager>& Managers);
