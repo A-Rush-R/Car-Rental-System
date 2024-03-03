@@ -233,7 +233,6 @@ void Car::saveToFile(const vector<Car>& cars, const string& filename) {
                     << car.due_date.getYear() << " " << car.due_date.getMonth() << " " << car.due_date.getDay() << endl;
         }
         outFile.close();
-        cout << "Records saved to " << filename << endl;
     } else {
         cerr << "Unable to open file " << filename << endl;
     }
@@ -252,7 +251,6 @@ void Car::loadFromFile(std::vector<Car>& cars, const std::string& filename) {
             cars.push_back(Car(model, id, condition, rent, DateTime(y_, m_, d_), DateTime(y, m, d), ownerID));
         }
         inFile.close();
-        cout << "Records loaded from " << filename << endl;
     } else {
         cerr << "Unable to open file " << filename << endl;
     }

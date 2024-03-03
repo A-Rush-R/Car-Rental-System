@@ -1254,7 +1254,6 @@ void Customer :: saveToFile(const std::vector<Customer>& customers, const std::s
 
         }
         outFile.close();
-        cout << "Records saved to " << filename << endl;
     } else {
         cerr << "Unable to open file " << filename << endl;
     }
@@ -1275,7 +1274,6 @@ void Employee :: saveToFile(const vector<Employee>& employees, const string& fil
 
         }
         outFile.close();
-        cout << "Records saved to " << filename << endl;
     } else {
         cerr << "Unable to open file " << filename << endl;
     }
@@ -1289,7 +1287,6 @@ void Manager :: saveToFile(const vector<Manager>& managers, const string& filena
 
         }
         outFile.close();
-        cout << "Records saved to " << filename << endl;
     } else {
         cerr << "Unable to open file " << filename << endl;
     }
@@ -1318,7 +1315,6 @@ void Customer::loadFromFile(std::vector<Customer>& customers, const std::string&
         inFile.close();
         if(customers.size())
             AVG_CUSTOMER_RECORD = sum_record / customers.size();
-        cout << "Records loaded from " << filename << endl;
     } else {
         cerr << "Unable to open file " << filename << endl;
     }
@@ -1345,8 +1341,7 @@ void Employee ::loadFromFile(std::vector<Employee>& employess, const std::string
         }
         inFile.close();
         if(employess.size())
-            AVG_EMPLOYEE_RECORD = sum_record / employess.size();
-        cout << "Records loaded from " << filename << endl;
+            AVG_EMPLOYEE_RECORD = sum_record / employess.size(); 
     } else {
         cerr << "Unable to open file " << filename << endl;
     }
@@ -1363,7 +1358,6 @@ void Manager :: loadFromFile(vector<Manager>& managers, const string& filename) 
             managers.push_back(Manager(name,id,password));
         }
         inFile.close();
-        cout << "Records loaded from " << filename << endl;
     } else {
         cerr << "Unable to open file " << filename << endl;
     }
