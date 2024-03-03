@@ -297,7 +297,7 @@ void Customer::updateCustomer(std::vector<Customer>& customers)
                 }
                 break;
             default :
-                cout << "Choose a valid option" << endl;
+                invalid_option();
                 updateCustomer(customers);
                 break;
         }
@@ -514,7 +514,7 @@ void Employee :: updateEmployee(vector<Employee>& Employees) {
                 }
                 break;
             default :
-                cout << "Choose a valid option" << endl;
+                invalid_option();
                 updateEmployee(Employees);
                 break;
         }
@@ -726,7 +726,7 @@ void Manager :: show_records(vector<Customer>& customers, vector<Employee>& empl
             exit();
             return;
         default : 
-            cout << "Invalid Input" << endl;
+            invalid_option();
             break;
     }
     show_records(customers,employees,cars);
@@ -847,7 +847,7 @@ void Manager :: updateManager(vector<Manager>& Managers) {
                 it->set_password(password);
                 break;
             default :
-                cout << "Choose a valid option" << endl;
+                invalid_option();
                 updateManager(Managers);
                 break;
         }
@@ -975,7 +975,7 @@ void Manager :: modify_records(vector<Customer>& customers, vector<Car>& cars, v
                 begin_session(customers,cars,employees);
                 return;
             default:
-                cout << "Incorrect Option !" << endl;
+                invalid_option();
                 modify_records(customers,cars,employees);
                 return;
             }
@@ -1000,7 +1000,7 @@ void Manager :: modify_records(vector<Customer>& customers, vector<Car>& cars, v
                 Employee :: deleteEmployee(employees);
                 break;
             default:
-                cout << "Incorrect Option !" << endl;
+                invalid_option();
                 modify_records(customers,cars,employees);
 
                 break;
@@ -1026,13 +1026,14 @@ void Manager :: modify_records(vector<Customer>& customers, vector<Car>& cars, v
                 Car :: deleteCar(cars);
                 break;
             default:
-                cout << "Incorrect Option !" << endl;
+                invalid_option();
                 modify_records(customers,cars,employees);
 
                 break;
             }
             break;
-        default : cout << "Please enter a valid number!" << endl;
+        default :
+            invalid_option();
             modify_records(customers,cars,employees);
             break;
     }
@@ -1105,7 +1106,7 @@ void Customer :: begin_session(vector<Car>& cars)
             return;
             break;
         default :
-            cout << "Enter a valid option" << endl;
+            invalid_option();
             break;
     }
     begin_session(cars);
@@ -1192,7 +1193,7 @@ void Employee :: begin_session(vector<Car>& cars)
             return;
             break;
         default :
-            cout << "Enter a valid option" << endl;
+            invalid_option();
             break;
     }
     begin_session(cars);
@@ -1225,7 +1226,7 @@ void Manager :: begin_session(vector<Customer>& customers, vector<Car>& cars, ve
             exit();
             return;
         default:
-            cout << "Invalid Option" << endl;
+            invalid_option();
     }
     begin_session(customers,cars,employees);
 }
