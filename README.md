@@ -25,7 +25,6 @@ This repository has the following contents &rarr;
     - [`employees.txt`](/employees.txt)
     - [`managers.txt`](/managers.txt)
 
-
 ## Instructions 
 Run the following command to compile and run the programme 
 ```bash
@@ -41,6 +40,8 @@ g++ user.o dateTime.o main.o car.o utils.o -o my_program
 ## Details
 - Employees get a discount of 15% for renting cars
 - Employees have the option of repairing a car, which rewards them by increasing their record
+- Only customers can register on their own, registering an employee would require manager to do it.
+- Functionality of adding/deleting/updating is implemented but not accessible to any user/manager and must be done by manually adding in the database
 - An unexpected input will cause the program to terminate, but databases will be saved
 
 ## Assumptions 
@@ -49,6 +50,7 @@ g++ user.o dateTime.o main.o car.o utils.o -o my_program
     - Minor Scratches
     - Light Damage
     - Heavy Damage
-- The default cap on number of users (per type) is 100000, it can be changed in the [`constants.h`](/constants.h) file (it would require changing the id of all the objects in the database if done so)
-- At the time of return it is assumed that the condition of the car returned will be same or worse than the condition at the time of renting
-
+- The default cap on number of users (per type) is 100000, it can be changed in the [`constants.h`](/constants.h) file (it would require changing the id of all the objects in the database if done so).
+- At the time of return it is assumed that the condition of the car returned will be same or worse than the condition at the time of renting.
+- Whenever a string input is given it is assumped to have no spaces.
+- It is assumed that the user will give a date in present/future.
