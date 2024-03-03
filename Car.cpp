@@ -22,10 +22,7 @@ void Car :: repair()
 
 void Car :: show(int discount = 0) const {
     string status = ownerID == 0 ? "Available" : "Rented";
-    // cout << "ID   Model    Condition    Status    OwnerID  Rent(per day)" << std::endl;
     string condition_name;
-
-    assert(condition <= FINE && condition >= HEAVY_DAMAGE);
 
     switch (condition) {
         case HEAVY_DAMAGE:
@@ -166,10 +163,15 @@ void Car::deleteCar(std::vector<Car>& cars) {
         return car.id < id;
     });
 
-    if (it != cars.end()) {
-        cars.erase(it);
-    } else {
+    if (it == cars.end()) {
         cout << "Car with ID " << carId << " not found." << endl;
+    } 
+    else if (it->ownerID != 0){
+        cout << "Car is rented by a user and cannot be deleted!" << endl;
+    }
+    else{
+        cars.erase(it);
+        cout << "Car with ID " << carId << " deleted." << endl;
     }
 }
 

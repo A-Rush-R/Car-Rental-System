@@ -209,7 +209,7 @@ void Customer::addCustomer(std::vector<Customer>& customers)
     // cout << "DEBUGGING" << endl;
 
     cout << "ID of the new Customer is : " << id << endl;
-    customers.push_back(Customer(name,id,password));
+    customers.push_back(Customer(name,id,password,0,AVG_CUSTOMER_RECORD));
 }
 
 Customer* Customer::login(std::vector<Customer>& customers)  {
@@ -1173,6 +1173,8 @@ void Employee :: begin_session(vector<Car>& cars)
                 cout << "Car not found" << endl ;
             else if (carIt->condition == FINE)
                 cout << "Car is already in good condition" << endl;
+            else if (carIt->ownerID  != 0)
+                cout << "Car is rented currently" << endl;
             else{
                 record = record + REPAIR_REWARD * (FINE - carIt->condition); 
                 carIt->repair();
@@ -1299,7 +1301,7 @@ void Customer::loadFromFile(std::vector<Customer>& customers, const std::string&
             customers.push_back(Customer(name,id,password,fine_due,record,rented_cars));
         }
         inFile.close();
-        if(!customers.size())
+        if(customers.size())
             AVG_CUSTOMER_RECORD = sum_record / customers.size();
         cout << "Records loaded from " << filename << endl;
     } else {
@@ -1327,7 +1329,7 @@ void Employee ::loadFromFile(std::vector<Employee>& employess, const std::string
             employess.push_back(Employee(name,id,password,fine_due,record,rented_cars));
         }
         inFile.close();
-        if(!employess.size())
+        if(employess.size())
             AVG_EMPLOYEE_RECORD = sum_record / employess.size();
         cout << "Records loaded from " << filename << endl;
     } else {
