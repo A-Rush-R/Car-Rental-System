@@ -16,7 +16,7 @@ datetime.o: dateTime.cpp dateTime.h
 main.o: main.cpp
 	g++ -c main.cpp -o main.o
 
-# .PHONY: clean 
+.PHONY: clean 
 clean:
 	rm -f utils.o 
 	rm -f car.o 
