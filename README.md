@@ -26,15 +26,13 @@ This repository has the following contents &rarr;
     - [`managers.txt`](/managers.txt)
 
 ## Instructions 
-Run the following command to compile and run the programme 
+- Run the following make command to compile and run the programme 
 ```bash
-g++ -c main.cpp -o main.o
-g++ -c dateTime.cpp -o dateTime.o
-g++ -c car.cpp -o car.o
-g++ -c utils.cpp -o utils.o
-g++ -c user.cpp -o user.o
-g++ user.o dateTime.o main.o car.o utils.o -o my_program
-./my_program.exe
+make 
+```
+- To clean the files, run the following command 
+```bash
+make clean 
 ```
 
 ## Details
